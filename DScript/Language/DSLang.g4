@@ -3,6 +3,8 @@ grammar DSLang;
 @parser::header
 {
 	#pragma warning disable 3021
+
+	using DScript.Context.Arguments;
 }
 
 @parser::members
@@ -42,12 +44,11 @@ arguments
 	;
 
 argument
-	:	IDENT
-	|	STRING
+	:	STRING
 	|	STRING_EXT
 	|	NUMBER
 	|	VAR_SPEC IDENT
-	|	ENTITY_SPEC IDENT SCOPE IDENT
+	|	command
 	;
 
 /*
@@ -101,16 +102,8 @@ VAR_SPEC
 	:	'$'
 	;
 
-ENTITY_SPEC
-	:	'@'
-	;
-
-SCOPE
-	:	':'
-	;
-
 IDENT
-	:	[a-zA-Z] ([0-9a-zA-Z] | '.' | '-' | '_' | '/')*
+	:	[a-zA-Z_] [0-9a-zA-Z.-_]*
 	;
 
 WS

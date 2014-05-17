@@ -44,6 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Commands\ConstantArgument.cs" />
+    <Compile Include="Context\Commands\IArgument.cs" />
+    <Compile Include="Context\Commands\ICommandExecutor.cs" />
+    <Compile Include="Context\IExecutionContext.cs" />
+    <Compile Include="Context\Variables\BasicVariable.cs" />
+    <Compile Include="Context\Variables\ConstantVariable.cs" />
+    <Compile Include="Context\Variables\DelegatedVariable.cs" />
+    <Compile Include="Context\Variables\IVariable.cs" />
+    <Compile Include="Context\Commands\VariableArgument.cs" />
+    <Compile Include="Context\Variables\VariableNotDefinedException.cs" />
     <Compile Include="Language\DSLang.g4.lexer.cs">
       <DependentUpon>DSLang.g4</DependentUpon>
     </Compile>
