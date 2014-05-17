@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DScript.Context.Commands
+namespace DScript.Context
 {
-    public interface ICommandExecutor
+    public interface IValue
     {
-
+        T GetValue<T>();
     }
 }

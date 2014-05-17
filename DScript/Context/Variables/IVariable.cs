@@ -8,7 +8,7 @@ namespace DScript.Context.Variables
 {
     public interface IVariable
     {
-        string Value
+        IValue Value
         {
             get;
             set;

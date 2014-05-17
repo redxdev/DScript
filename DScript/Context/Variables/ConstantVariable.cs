@@ -8,14 +8,14 @@ namespace DScript.Context.Variables
 {
     public class ConstantVariable : IVariable
     {
-        private readonly string value;
+        private readonly IValue value;
 
-        public ConstantVariable(string value)
+        public ConstantVariable(IValue value)
         {
             this.value = value;
         }
 
-        public string Value
+        public IValue Value
         {
             get
             {

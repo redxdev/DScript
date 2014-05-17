@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 namespace DScript.Context.Variables
 {
     [Serializable]
-    public class VariableNotDefinedException : Exception
+    public class VariableAlreadyDefinedException : Exception
     {
-        public VariableNotDefinedException()
+        public VariableAlreadyDefinedException()
             : base()
         {
         }
 
-        public VariableNotDefinedException(string message)
+        public VariableAlreadyDefinedException(string message)
             : base(message)
         {
         }
 
-        public VariableNotDefinedException(string message, Exception inner)
+        public VariableAlreadyDefinedException(string message, Exception inner)
             : base(message, inner)
         {
         }

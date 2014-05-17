@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DScript.Context.Commands
+namespace DScript.Context.Arguments
 {
     public interface IArgument
     {
-        string GetRawValue(IExecutionContext context);
+        IValue GetRawValue(IExecutionContext context);
 
-        string GetValue(IExecutionContext context);
+        IValue GetValue(IExecutionContext context);
     }
 }

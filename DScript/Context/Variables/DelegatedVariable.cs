@@ -14,9 +14,9 @@ namespace DScript.Context.Variables
             this.Setter = null;
         }
 
-        public delegate string GetterFunction();
+        public delegate IValue GetterFunction();
 
-        public delegate void SetterFunction(string value);
+        public delegate void SetterFunction(IValue value);
 
         public GetterFunction Getter
         {
@@ -30,7 +30,7 @@ namespace DScript.Context.Variables
             set;
         }
 
-        public string Value
+        public IValue Value
         {
             get
             {

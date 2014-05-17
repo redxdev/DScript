@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DScript.Context.Variables
+namespace DScript.Context.Attributes
 {
-    public class BasicVariable : IVariable
+    [AttributeUsage(AttributeTargets.Method)]
+    public class CommandAttribute : Attribute
     {
-        public IValue Value
+        public string Name
         {
             get;
             set;

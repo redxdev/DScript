@@ -4,22 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DScript.Context.Variables
+namespace DScript.Context
 {
     [Serializable]
-    public class VariableNotDefinedException : Exception
+    public class CommandAlreadyDefinedException : Exception
     {
-        public VariableNotDefinedException()
+        public CommandAlreadyDefinedException()
             : base()
         {
         }
 
-        public VariableNotDefinedException(string message)
+        public CommandAlreadyDefinedException(string message)
             : base(message)
         {
         }
 
-        public VariableNotDefinedException(string message, Exception inner)
+        public CommandAlreadyDefinedException(string message, Exception inner)
             : base(message, inner)
         {
         }

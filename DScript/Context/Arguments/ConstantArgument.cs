@@ -4,23 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DScript.Context.Commands
+namespace DScript.Context.Arguments
 {
     public class ConstantArgument : IArgument
     {
-        private readonly string value;
+        private readonly IValue value;
 
-        public ConstantArgument(string value)
+        public ConstantArgument(IValue value)
         {
             this.value = value;
         }
 
-        public string GetRawValue(IExecutionContext context)
+        public IValue GetRawValue(IExecutionContext context)
         {
             return this.value;
         }
 
-        public string GetValue(IExecutionContext context)
+        public IValue GetValue(IExecutionContext context)
         {
             return this.value;
         }

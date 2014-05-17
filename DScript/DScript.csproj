@@ -44,15 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Context\Commands\ConstantArgument.cs" />
-    <Compile Include="Context\Commands\IArgument.cs" />
-    <Compile Include="Context\Commands\ICommandExecutor.cs" />
+    <Compile Include="Context\Attributes\ContextRegistrationAttribute.cs" />
+    <Compile Include="Context\Attributes\CommandAttribute.cs" />
+    <Compile Include="Context\CodeBlock.cs" />
+    <Compile Include="Context\Arguments\ConstantArgument.cs" />
+    <Compile Include="Context\Arguments\ExecutableArgument.cs" />
+    <Compile Include="Context\Arguments\IArgument.cs" />
+    <Compile Include="Context\CommandAlreadyDefinedException.cs" />
+    <Compile Include="Context\CommandNotDefinedException.cs" />
+    <Compile Include="Context\Executable.cs" />
+    <Compile Include="Context\ExecutionContext.cs" />
+    <Compile Include="Context\ICodeBlock.cs" />
+    <Compile Include="Context\IExecutable.cs" />
+    <Compile Include="Context\GenericValue.cs" />
     <Compile Include="Context\IExecutionContext.cs" />
+    <Compile Include="Context\IValue.cs" />
     <Compile Include="Context\Variables\BasicVariable.cs" />
     <Compile Include="Context\Variables\ConstantVariable.cs" />
     <Compile Include="Context\Variables\DelegatedVariable.cs" />
     <Compile Include="Context\Variables\IVariable.cs" />
-    <Compile Include="Context\Commands\VariableArgument.cs" />
+    <Compile Include="Context\Arguments\VariableArgument.cs" />
+    <Compile Include="Context\Variables\VariableAlreadyDefinedException.cs" />
     <Compile Include="Context\Variables\VariableNotDefinedException.cs" />
     <Compile Include="Language\DSLang.g4.lexer.cs">
       <DependentUpon>DSLang.g4</DependentUpon>
@@ -61,6 +73,8 @@
       <DependentUpon>DSLang.g4</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ContextUtilities.cs" />
+    <Compile Include="Utility\LanguageUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Antlr4 Include="Language\DSLang.g4">

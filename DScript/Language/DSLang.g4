@@ -4,6 +4,7 @@ grammar DSLang;
 {
 	#pragma warning disable 3021
 
+	using DScript.Context;
 	using DScript.Context.Arguments;
 }
 
@@ -27,28 +28,94 @@ grammar DSLang;
  * Parser Rules
  */
 
-compileUnit
-	:	commands? EOF
+compileUnit returns [IExecutable executable]
+	:
+	{
+		$executable = new Executable()
+		{
+			CodeBlocks = new List<ICodeBlock>()
+		};
+	}
+	(
+		cmds=commands
+		{
+			executable.CodeBlocks = $cmds.codeBlocks;
+		}
+	)?	EOF
 	;
 
-commands
-	:	command+
+commands returns [List<ICodeBlock> codeBlocks]
+	:
+	{
+		$codeBlocks = new List<ICodeBlock>();
+	}
+	(
+		cmd=command
+		{
+			$codeBlocks.Add($cmd.codeBlock);
+		}
+	)+
 	;
 
-command
-	:	IDENT arguments
+command returns [ICodeBlock codeBlock]
+	:	cmdName=IDENT args=arguments
+	{
+		$codeBlock = new CodeBlock()
+		{
+			Command = $cmdName.text,
+			Arguments = $args.args
+		};
+	}
 	;
 
-arguments
-	:	GROUP_START ( argument ( ARGUMENT_SEPARATOR argument )* )? GROUP_END
+arguments returns [List<IArgument> args]
+	:
+	{
+		$args = new List<IArgument>();
+	}
+		GROUP_START
+	(
+		a1=argument
+		{
+			$args.Add($a1.result);
+		}
+
+		(
+			ARGUMENT_SEPARATOR a2=argument
+			{
+				$args.Add($a2.result);
+			}
+		)*
+	)? GROUP_END
 	;
 
-argument
-	:	STRING
-	|	STRING_EXT
-	|	NUMBER
-	|	VAR_SPEC IDENT
-	|	command
+argument returns [IArgument result]
+	:	str=STRING
+		{
+			$result = new ConstantArgument(new GenericValue<string>($str.text));
+		}
+	|	strExt=STRING_EXT
+		{
+			$result = new ConstantArgument(new GenericValue<string>($strExt.text));
+		}
+	|	num=NUMBER
+		{
+			$result = new ConstantArgument(new GenericValue<double>(double.Parse($result.text)));
+		}
+	|	VAR_SPEC var=IDENT
+		{
+			$result = new VariableArgument()
+				{
+					Variable = $var.text
+				};
+		}
+	|	exe=command
+		{
+			$result = new ExecutableArgument()
+				{
+					Code = $exe.codeBlock
+				};
+		}
 	;
 
 /*
