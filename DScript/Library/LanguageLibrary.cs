@@ -9,7 +9,7 @@ using DScript.Context.Attributes;
 using DScript.Context.Variables;
 using DScript.Utility;
 
-namespace DScript.Libary
+namespace DScript.Library
 {
     public static class LanguageLibrary
     {

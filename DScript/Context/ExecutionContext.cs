@@ -109,10 +109,10 @@ namespace DScript.Context
         {
             foreach(Type type in assembly.GetTypes())
             {
-                foreach(MethodInfo methodInfo in type.GetMethods())
+                foreach (MethodInfo methodInfo in type.GetMethods())
                 {
                     if (!methodInfo.IsStatic)
-                        return;
+                        break;
 
                     foreach(CommandAttribute commandAttribute in methodInfo.GetCustomAttributes<CommandAttribute>(false))
                     {

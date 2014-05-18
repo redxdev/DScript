@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\LanguageLibrary.cs" />
+    <Compile Include="Library\Utility.cs" />
+    <Compile Include="Library\Language.cs" />
     <Compile Include="Context\Attributes\ContextRegistrationAttribute.cs" />
     <Compile Include="Context\Attributes\CommandAttribute.cs" />
     <Compile Include="Context\CodeBlock.cs" />

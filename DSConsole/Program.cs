@@ -22,18 +22,6 @@ namespace DSConsole
             bool running = true;
 
             context.RegisterCommand("exit", (ctx, arguments) => { running = false; return null; });
-            context.RegisterCommand("echo", (ctx, arguments) =>
-            {
-                string[] str = new string[arguments.Count];
-                for (int i = 0; i < arguments.Count; i++)
-                {
-                    str[i] = arguments[i].GetValue(ctx).ToString();
-                }
-
-                string result = string.Join(" ", str);
-
-                return new GenericValue<string>(result);
-            });
 
             while(running)
             {
