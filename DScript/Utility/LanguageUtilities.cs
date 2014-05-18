@@ -24,12 +24,14 @@ namespace DScript.Utility
         public static IExecutable Parse(ICharStream input)
         {
             DSLangLexer lexer = new DSLangLexer(input);
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(LexerErrorListener.Instance);
 
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
             DSLangParser parser = new DSLangParser(tokenStream);
             parser.RemoveErrorListeners();
-            parser.AddErrorListener(new ExceptionErrorListener());
+            parser.AddErrorListener(ParserErrorListener.Instance);
 
             IExecutable executable = parser.compileUnit().executable;
 

@@ -137,15 +137,21 @@ fragment ESCAPE_SEQUENCE
 	(
 		'\\'
 	|	'"'
+	|	'\''
 	)
 	;
 
 STRING
-	:	'"' ( ESCAPE_SEQUENCE | . )*? '"'
+	:
+	(
+		'"' ( ESCAPE_SEQUENCE | . )*? '"'
+	|	'\'' ( ESCAPE_SEQUENCE | . )*? '\''
+	)
 	{
 		Text = Text.Substring(1, Text.Length - 2)
 				.Replace("\\\\", "\\")
-				.Replace("\\\"", "\"");
+				.Replace("\\\"", "\"")
+				.Replace("\\\'", "\'");
 	}
 	;
 

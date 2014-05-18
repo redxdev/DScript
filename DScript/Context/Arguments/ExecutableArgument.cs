@@ -16,7 +16,7 @@ namespace DScript.Context.Arguments
 
         public IValue GetRawValue(IExecutionContext context)
         {
-            return new GenericValue<string>(this.Code.ToString());
+            return new GenericValue<ICodeBlock>(this.Code);
         }
 
         public IValue GetValue(IExecutionContext context)

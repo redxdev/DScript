@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Language\LexerErrorListener.cs" />
+    <Compile Include="Library\IOLibrary.cs" />
     <Compile Include="Library\UtilityLibrary.cs" />
     <Compile Include="Library\LanguageLibrary.cs" />
     <Compile Include="Context\Attributes\ContextRegistrationAttribute.cs" />
@@ -74,7 +76,7 @@
     <Compile Include="Language\DSLang.g4.parser.cs">
       <DependentUpon>DSLang.g4</DependentUpon>
     </Compile>
-    <Compile Include="Language\ExceptionErrorListener.cs" />
+    <Compile Include="Language\ParserErrorListener.cs" />
     <Compile Include="Language\ParseException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ArgumentManager.cs" />

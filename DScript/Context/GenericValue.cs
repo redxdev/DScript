@@ -25,6 +25,11 @@ namespace DScript.Context
                 return default(V);
             }
 
+            if(typeof(T) == typeof(V))
+            {
+                return (V)(object)this.value;
+            }
+
             var converter = TypeDescriptor.GetConverter(typeof(V));
             if (converter != null && converter.CanConvertFrom(typeof(T)))
             {
@@ -36,6 +41,9 @@ namespace DScript.Context
 
         public bool CanConvert<V>()
         {
+            if (typeof(V) == typeof(T))
+                return true;
+
             var converter = TypeDescriptor.GetConverter(typeof(V));
             return converter != null && converter.CanConvertFrom(typeof(T));
         }

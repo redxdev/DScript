@@ -57,6 +57,14 @@ namespace DSConsole
                     result = context.Execute(executable);
                     Console.WriteLine(result);
                 }
+                catch(ArgumentException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.WriteLine("Argument error:");
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
                 catch(Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;

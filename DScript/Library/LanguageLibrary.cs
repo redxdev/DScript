@@ -36,8 +36,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Amount(2)
-                .Execute()
                 .CanConvert<string>(0)
+                .Execute()
                 .Results();
 
             ctx.GetVariable(args[0].GetValue<string>()).Value = args[1];
@@ -50,8 +50,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Amount(1)
-                .Execute()
                 .CanConvert<string>(0)
+                .Execute()
                 .Results();
 
             return ctx.GetVariable(args[0].GetValue<string>()).Value;
@@ -62,8 +62,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .AmountBetween(1, 2)
-                .Execute()
                 .CanConvert<string>(0)
+                .Execute()
                 .Results();
 
             switch(args.Length)
@@ -85,8 +85,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Amount(1)
-                .Execute()
                 .CanConvert<string>(0)
+                .Execute()
                 .Results();
 
             ctx.UndefineVariable(args[0].GetValue<string>());
@@ -104,6 +104,45 @@ namespace DScript.Library
                 .Results();
 
             return new GenericValue<bool>(ctx.HasVariable(args[0].GetValue<string>()));
+        }
+
+        [Command(Name = "block")]
+        public static IValue Block(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Amount(1)
+                .CanConvert<ICodeBlock>(0)
+                .Results();
+
+            return args[0];
+        }
+
+        [Command(Name = "build")]
+        public static IValue Build(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Amount(1)
+                .CanConvert<string>(0)
+                .Execute()
+                .Results();
+
+            IExecutable executable = LanguageUtilities.ParseString(args[0].GetValue<string>());
+            return new GenericValue<IExecutable>(executable);
+        }
+
+        [Command(Name = "execute")]
+        public static IValue Execute(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Amount(1)
+                .CanConvert<IExecutable, ICodeBlock>(0)
+                .Execute()
+                .Results();
+
+            if (args[0].CanConvert<IExecutable>())
+                return ctx.Execute(args[0].GetValue<IExecutable>());
+            else
+                return ctx.Execute(args[0].GetValue<ICodeBlock>());
         }
     }
 }
