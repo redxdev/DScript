@@ -50,36 +50,19 @@ commands returns [List<ICodeBlock> codeBlocks]
 		$codeBlocks = new List<ICodeBlock>();
 	}
 	(
-		cmd=command
+		cmd=statement
 		{
 			$codeBlocks.Add($cmd.codeBlock);
 		}
 	)+
 	;
 
-command returns [ICodeBlock codeBlock]
+statement returns [ICodeBlock codeBlock]
 	:
 		vd=variable_def { $codeBlock = $vd.codeBlock; }
 	|	vs=variable_set { $codeBlock = $vs.codeBlock; }
-	|	cmdName=IDENT args=arguments
-	{
-		$codeBlock = new CodeBlock()
-			{
-				Command = $cmdName.text,
-				Arguments = $args.args
-			};
-	}
-	|	VAR_SPEC var=IDENT varArgs=arguments
-	{
-		List<IArgument> vargs = new List<IArgument>();
-		vargs.Add(new ConstantArgument(new GenericValue<string>($var.text)));
-		vargs.AddRange($varArgs.args);
-		$codeBlock = new CodeBlock()
-		{
-			Command = vargs.Count == 1 ? "get" : "set",
-			Arguments = vargs
-		};
-	}
+	|	cmd=command { $codeBlock = $cmd.codeBlock; }
+	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -110,6 +93,37 @@ variable_set returns [ICodeBlock codeBlock]
 			};
 		$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
 		$codeBlock.Arguments.Add($arg.result);
+	}
+	;
+
+variable_info returns [ICodeBlock codeBlock]
+	:	VAR_SPEC var=IDENT
+	{
+		List<IArgument> vargs = new List<IArgument>();
+		vargs.Add(new ConstantArgument(new GenericValue<string>($var.text)));
+		$codeBlock = new CodeBlock()
+		{
+			Command = "get",
+			Arguments = vargs
+		};
+	}
+	(
+		varArgs=arguments
+		{
+			vargs.AddRange($varArgs.args);
+			$codeBlock.Command = "set";
+		}
+	)?
+	;
+
+command returns [ICodeBlock codeBlock]
+	:	cmdName=IDENT args=arguments
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = $cmdName.text,
+				Arguments = $args.args
+			};
 	}
 	;
 
@@ -154,7 +168,7 @@ argument returns [IArgument result]
 					Variable = $var.text
 				};
 		}
-	|	exe=command
+	|	exe=statement
 		{
 			$result = new ExecutableArgument()
 				{
