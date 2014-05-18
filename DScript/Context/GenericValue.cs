@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
+using DScript.Utility.Conversion;
 
 namespace DScript.Context
 {
@@ -30,22 +30,12 @@ namespace DScript.Context
                 return (V)(object)this.value;
             }
 
-            var converter = TypeDescriptor.GetConverter(typeof(V));
-            if (converter != null && converter.CanConvertFrom(typeof(T)))
-            {
-                return (V)converter.ConvertFrom(this.value);
-            }
-
-            return default(V);
+            return TypeConverter.Convert<T, V>(this.value);
         }
 
         public bool CanConvert<V>()
         {
-            if (typeof(V) == typeof(T))
-                return true;
-
-            var converter = TypeDescriptor.GetConverter(typeof(V));
-            return converter != null && converter.CanConvertFrom(typeof(T));
+            return TypeConverter.CanConvert<T, V>();
         }
 
         public Type GetValueType()

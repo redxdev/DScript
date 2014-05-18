@@ -86,6 +86,13 @@
     <Compile Include="Utility\ArgumentTypeException.cs" />
     <Compile Include="Utility\CommandUtilities.cs" />
     <Compile Include="Utility\ContextUtilities.cs" />
+    <Compile Include="Utility\Conversion\Attributes\ConverterAttribute.cs" />
+    <Compile Include="Utility\Conversion\BaseConverter.cs" />
+    <Compile Include="Utility\Conversion\ConversionException.cs" />
+    <Compile Include="Utility\Conversion\NoConveter.cs" />
+    <Compile Include="Utility\Conversion\ConversionInitializer.cs" />
+    <Compile Include="Utility\Conversion\TypeConverter.cs" />
+    <Compile Include="Utility\Conversion\SystemConverters.cs" />
     <Compile Include="Utility\LanguageUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

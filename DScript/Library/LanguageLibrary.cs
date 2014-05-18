@@ -36,8 +36,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(2)
-                .CanConvert<string>(0)
                 .Execute()
+                .CanConvert<string>(0)
                 .Results();
 
             ctx.GetVariable(args[0].GetValue<string>()).Value = args[1];
@@ -50,8 +50,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .CanConvert<string>(0)
                 .Execute()
+                .CanConvert<string>(0)
                 .Results();
 
             return ctx.GetVariable(args[0].GetValue<string>()).Value;
@@ -62,8 +62,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Between(1, 2)
-                .CanConvert<string>(0)
                 .Execute()
+                .CanConvert<string>(0)
                 .Results();
 
             switch(args.Length)
@@ -85,8 +85,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .CanConvert<string>(0)
                 .Execute()
+                .CanConvert<string>(0)
                 .Results();
 
             ctx.UndefineVariable(args[0].GetValue<string>());
@@ -122,8 +122,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .CanConvert<string>(0)
                 .Execute()
+                .CanConvert<string>(0)
                 .Results();
 
             IExecutable executable = LanguageUtilities.ParseString(args[0].GetValue<string>());
@@ -135,8 +135,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .CanConvert<IExecutable, ICodeBlock>(0)
                 .Execute()
+                .CanConvert<IExecutable, ICodeBlock>(0)
                 .Results();
 
             if (args[0].CanConvert<IExecutable>())

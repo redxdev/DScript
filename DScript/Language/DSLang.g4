@@ -58,24 +58,58 @@ commands returns [List<ICodeBlock> codeBlocks]
 	;
 
 command returns [ICodeBlock codeBlock]
-	:	cmdName=IDENT args=arguments
+	:
+		vd=variable_def { $codeBlock = $vd.codeBlock; }
+	|	vs=variable_set { $codeBlock = $vs.codeBlock; }
+	|	cmdName=IDENT args=arguments
 	{
 		$codeBlock = new CodeBlock()
-		{
-			Command = $cmdName.text,
-			Arguments = $args.args
-		};
+			{
+				Command = $cmdName.text,
+				Arguments = $args.args
+			};
 	}
-	|	VAR_SPEC setVar=IDENT varArgs=arguments
+	|	VAR_SPEC var=IDENT varArgs=arguments
 	{
 		List<IArgument> vargs = new List<IArgument>();
-		vargs.Add(new ConstantArgument(new GenericValue<string>($setVar.text)));
+		vargs.Add(new ConstantArgument(new GenericValue<string>($var.text)));
 		vargs.AddRange($varArgs.args);
 		$codeBlock = new CodeBlock()
 		{
 			Command = vargs.Count == 1 ? "get" : "set",
 			Arguments = vargs
 		};
+	}
+	;
+
+variable_def returns [ICodeBlock codeBlock]
+	:	VAR_DEF VAR_SPEC var=IDENT
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "define",
+				Arguments = new List<IArgument>()
+			};
+		$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
+	}
+	(
+		EQUALS arg=argument
+		{
+			$codeBlock.Arguments.Add($arg.result);
+		}
+	)?
+	;
+
+variable_set returns [ICodeBlock codeBlock]
+	:	VAR_SPEC var=IDENT EQUALS arg=argument
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "set",
+				Arguments = new List<IArgument>()
+			};
+		$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
+		$codeBlock.Arguments.Add($arg.result);
 	}
 	;
 
@@ -132,6 +166,7 @@ argument returns [IArgument result]
 /*
  * Lexer Rules
  */
+
 fragment ESCAPE_SEQUENCE
 	:	'\\'
 	(
@@ -184,6 +219,14 @@ GROUP_END
 
 VAR_SPEC
 	:	'$'
+	;
+
+VAR_DEF
+	:	'var'
+	;
+
+EQUALS
+	:	'='
 	;
 
 IDENT

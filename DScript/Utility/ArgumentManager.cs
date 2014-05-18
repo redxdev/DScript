@@ -16,11 +16,7 @@ namespace DScript.Utility
 
         private IValue[] values = null;
 
-        private LinkedList<Action> preExecutionActions = new LinkedList<Action>();
-
-        private LinkedList<Action> executionActions = new LinkedList<Action>();
-
-        private LinkedList<Action> postExecutionActions = new LinkedList<Action>();
+        private LinkedList<Action> actions = new LinkedList<Action>();
 
         public ArgumentManager(IExecutionContext context, IList<IArgument> arguments)
         {
@@ -36,17 +32,7 @@ namespace DScript.Utility
 
         public IValue[] Results()
         {
-            foreach(Action action in this.preExecutionActions)
-            {
-                action.Invoke();
-            }
-
-            foreach(Action action in this.executionActions)
-            {
-                action.Invoke();
-            }
-
-            foreach(Action action in this.postExecutionActions)
+            foreach(Action action in this.actions)
             {
                 action.Invoke();
             }
@@ -56,7 +42,7 @@ namespace DScript.Utility
 
         public ArgumentManager Exactly(int amount)
         {
-            this.preExecutionActions.AddLast(() =>
+            this.actions.AddLast(() =>
             {
                 if(this.arguments.Count != amount)
                 {
@@ -69,7 +55,7 @@ namespace DScript.Utility
 
         public ArgumentManager Between(int lower, int upper)
         {
-            this.preExecutionActions.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     if (this.arguments.Count < lower || this.arguments.Count > upper)
                     {
@@ -82,7 +68,7 @@ namespace DScript.Utility
 
         public ArgumentManager AtLeast(int amount)
         {
-            this.preExecutionActions.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     if (this.arguments.Count < amount)
                     {
@@ -95,7 +81,7 @@ namespace DScript.Utility
 
         public ArgumentManager AtMost(int amount)
         {
-            this.preExecutionActions.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     if (this.arguments.Count > amount)
                     {
@@ -106,10 +92,9 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager CanConvert<T1>(int index, bool raw = false)
+        public ArgumentManager CanConvert<T1>(int index)
         {
-            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
-            list.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     IValue value = this.values[index];
                     if (!value.CanConvert<T1>())
@@ -121,10 +106,9 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager CanConvert<T1, T2>(int index, bool raw = false)
+        public ArgumentManager CanConvert<T1, T2>(int index)
         {
-            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
-            list.AddLast(() =>
+            this.actions.AddLast(() =>
             {
                 IValue value = this.values[index];
                 if (!value.CanConvert<T1>() && !value.CanConvert<T2>())
@@ -136,10 +120,9 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager CanConvert<T1>(int start, int end, bool raw = false)
+        public ArgumentManager CanConvert<T1>(int start, int end)
         {
-            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
-            list.AddLast(() =>
+            this.actions.AddLast(() =>
             {
                 for (int i = start; i < end; i++)
                 {
@@ -154,10 +137,9 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager CanConvert<T1, T2>(int start, int end, bool raw = false)
+        public ArgumentManager CanConvert<T1, T2>(int start, int end)
         {
-            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
-            list.AddLast(() =>
+            this.actions.AddLast(() =>
             {
                 for (int i = start; i < end; i++)
                 {
@@ -172,12 +154,12 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager CanConvert<T1>(bool raw = false)
+        public ArgumentManager CanConvert<T1>()
         {
             return this.CanConvert<T1>(0, this.arguments.Count);
         }
 
-        public ArgumentManager CanConvert<T1, T2>(bool raw = false)
+        public ArgumentManager CanConvert<T1, T2>()
         {
             return this.CanConvert<T1, T2>(0, this.arguments.Count);
         }
@@ -189,7 +171,7 @@ namespace DScript.Utility
 
         public ArgumentManager Execute(int index)
         {
-            this.executionActions.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     this.values[index] = this.arguments[index].GetValue(this.context);
                 });
@@ -199,7 +181,7 @@ namespace DScript.Utility
 
         public ArgumentManager Execute(int start, int end)
         {
-            this.executionActions.AddLast(() =>
+            this.actions.AddLast(() =>
                 {
                     for(int i = start; i < end; i++)
                     {

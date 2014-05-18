@@ -26,5 +26,24 @@ namespace DScript.Library
 
             return new GenericValue<string>(result);
         }
+
+        [Command(Name = "concat")]
+        public static IValue Concat(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .AtLeast(2)
+                .Execute()
+                .CanConvert<string>()
+                .Results();
+
+            string[] str = new string[args.Length];
+            for(int i = 0; i < args.Length; i++)
+            {
+                str[i] = args[i].GetValue<string>();
+            }
+
+            string result = string.Join("", str);
+            return new GenericValue<string>(result);
+        }
     }
 }

@@ -43,8 +43,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(1)
-                .CanConvert<bool>()
                 .Execute()
+                .CanConvert<bool>()
                 .Results();
 
             return new GenericValue<bool>(!args[0].GetValue<bool>());
@@ -55,8 +55,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .CanConvert<bool>()
                 .Execute()
+                .CanConvert<bool>()
                 .Results();
 
             for (int i = 0; i < args.Length; i++)
@@ -73,8 +73,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .CanConvert<bool>()
                 .Execute()
+                .CanConvert<bool>()
                 .Results();
 
             for (int i = 0; i < args.Length; i++)
@@ -91,8 +91,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .CanConvert<double>()
                 .Execute()
+                .CanConvert<double>()
                 .Results();
 
             double result = args[0].GetValue<double>();
@@ -109,8 +109,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .CanConvert<double>()
                 .Execute()
+                .CanConvert<double>()
                 .Results();
 
             double result = args[0].GetValue<double>();
@@ -127,8 +127,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .CanConvert<double>()
                 .Execute()
+                .CanConvert<double>()
                 .Results();
 
             double result = args[0].GetValue<double>();
@@ -145,8 +145,8 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .CanConvert<double>()
                 .Execute()
+                .CanConvert<double>()
                 .Results();
 
             double result = args[0].GetValue<double>() / args[1].GetValue<double>();
