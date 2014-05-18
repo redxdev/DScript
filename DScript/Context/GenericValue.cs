@@ -11,11 +11,11 @@ namespace DScript.Context
     {
         public static GenericValue<T> Default = new GenericValue<T>(default(T));
 
-        private string value;
+        private T value;
 
         public GenericValue(T value)
         {
-            this.value = value == null ? null : value.ToString();
+            this.value = value;
         }
 
         public V GetValue<V>()
@@ -25,13 +25,13 @@ namespace DScript.Context
                 return default(V);
             }
 
-            if(typeof(string) == typeof(V))
+            if(typeof(T) == typeof(V))
             {
                 return (V)(object)this.value;
             }
 
             var converter = TypeDescriptor.GetConverter(typeof(V));
-            if (converter != null && converter.CanConvertFrom(typeof(string)))
+            if (converter != null && converter.CanConvertFrom(typeof(T)))
             {
                 return (V)converter.ConvertFrom(this.value);
             }
@@ -41,16 +41,16 @@ namespace DScript.Context
 
         public bool CanConvert<V>()
         {
-            if (typeof(V) == typeof(string))
+            if (typeof(V) == typeof(T))
                 return true;
 
             var converter = TypeDescriptor.GetConverter(typeof(V));
-            return converter != null && converter.CanConvertFrom(typeof(string));
+            return converter != null && converter.CanConvertFrom(typeof(T));
         }
 
         public Type GetValueType()
         {
-            return typeof(string);
+            return typeof(T);
         }
 
         public override string ToString()
