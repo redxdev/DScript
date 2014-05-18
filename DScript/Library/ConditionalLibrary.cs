@@ -33,5 +33,119 @@ namespace DScript.Library
 
             return GenericValue<object>.Default;
         }
+
+        [Command(Name = "equal")]
+        public static IValue Equal(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .AtLeast(2)
+                .Execute()
+                .Results();
+
+            IValue first = args[0];
+            for (int i = 1; i < args.Length; i++)
+            {
+                if (!first.Equals(args[i]))
+                    return new GenericValue<bool>(false);
+            }
+
+            return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "not")]
+        public static IValue Not(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(1)
+                .Execute()
+                .CanConvert<bool>()
+                .Results();
+
+            return new GenericValue<bool>(!args[0].GetValue<bool>());
+        }
+
+        [Command(Name = "and")]
+        public static IValue And(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .AtLeast(2)
+                .Execute()
+                .CanConvert<bool>()
+                .Results();
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (!args[i].GetValue<bool>())
+                    return new GenericValue<bool>(false);
+            }
+
+            return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "or")]
+        public static IValue Or(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .AtLeast(2)
+                .Execute()
+                .CanConvert<bool>()
+                .Results();
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i].GetValue<bool>())
+                    return new GenericValue<bool>(true);
+            }
+
+            return new GenericValue<bool>(false);
+        }
+
+        [Command(Name = "lt")]
+        public static IValue LessThan(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<double>()
+                .Results();
+
+            return new GenericValue<bool>(args[0].GetValue<double>() < args[1].GetValue<double>());
+        }
+
+        [Command(Name = "lteq")]
+        public static IValue LessThanEqual(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<double>()
+                .Results();
+
+            return new GenericValue<bool>(args[0].GetValue<double>() <= args[1].GetValue<double>());
+        }
+
+        [Command(Name = "gt")]
+        public static IValue GreaterThan(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<double>()
+                .Results();
+
+            return new GenericValue<bool>(args[0].GetValue<double>() > args[1].GetValue<double>());
+        }
+
+        [Command(Name = "gteq")]
+        public static IValue GreaterThanEqual(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<double>()
+                .Results();
+
+            return new GenericValue<bool>(args[0].GetValue<double>() >= args[1].GetValue<double>());
+        }
     }
 }

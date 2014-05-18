@@ -111,7 +111,7 @@ variable_info returns [ICodeBlock codeBlock]
 		varArgs=arguments
 		{
 			vargs.AddRange($varArgs.args);
-			$codeBlock.Command = "set";
+			$codeBlock.Command = vargs.Count == 1 ? "get" : "set";
 		}
 	)?
 	;
