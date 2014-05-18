@@ -14,17 +14,15 @@ namespace DScript.Context
             set;
         }
 
-        public IEnumerable<ICodeBlock> GetCodeBlocks()
+        public IValue Execute(IExecutionContext context)
         {
-            return this.CodeBlocks;
-        }
-
-        public void Execute(IExecutionContext context)
-        {
+            IValue last = null;
             foreach(ICodeBlock code in this.CodeBlocks)
             {
-                context.Execute(code);
+                last = context.Execute(code);
             }
+
+            return last;
         }
     }
 }

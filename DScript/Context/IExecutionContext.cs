@@ -18,6 +18,10 @@ namespace DScript.Context
     /// </summary>
     public interface IExecutionContext
     {
+        int GetMajorVersion();
+
+        int GetMinorVersion();
+
         bool HasVariable(string variable);
 
         bool TryGetVariable(string variable, out IVariable value);
@@ -40,7 +44,7 @@ namespace DScript.Context
 
         void UnregisterCommand(string name);
 
-        void Execute(IExecutable executable);
+        IValue Execute(IExecutable executable);
 
         IValue Execute(ICodeBlock code);
 

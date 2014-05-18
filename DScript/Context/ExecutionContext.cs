@@ -12,12 +12,25 @@ namespace DScript.Context
 {
     public class ExecutionContext : IExecutionContext
     {
+        public const int MajorVersion = 1;
+        public const int MinorVersion = 0;
+
         private Dictionary<string, IVariable> variables = new Dictionary<string, IVariable>();
 
         private Dictionary<string, ScriptCommand> commands = new Dictionary<string, ScriptCommand>();
 
         public ExecutionContext()
         {
+        }
+
+        public int GetMajorVersion()
+        {
+            return MajorVersion;
+        }
+
+        public int GetMinorVersion()
+        {
+            return MinorVersion;
         }
 
         public bool HasVariable(string variable)
@@ -68,7 +81,7 @@ namespace DScript.Context
 
         public bool TryGetCommand(string command, out ScriptCommand value)
         {
-            return this.TryGetCommand(command, out value);
+            return this.commands.TryGetValue(command, out value);
         }
 
         public ScriptCommand GetCommand(string command)
@@ -125,9 +138,9 @@ namespace DScript.Context
             this.commands.Remove(name);
         }
 
-        public void Execute(IExecutable executable)
+        public IValue Execute(IExecutable executable)
         {
-            executable.Execute(this);
+            return executable.Execute(this);
         }
 
         public IValue Execute(ICodeBlock code)
@@ -137,7 +150,10 @@ namespace DScript.Context
 
         public IValue Execute(string command, IList<IArgument> arguments)
         {
-            return this.GetCommand(command)(this, arguments);
+            IValue result = this.GetCommand(command)(this, arguments);
+            if (result == null)
+                result = GenericValue<object>.Default;
+            return result;
         }
     }
 }

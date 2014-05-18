@@ -32,14 +32,14 @@ compileUnit returns [IExecutable executable]
 	:
 	{
 		$executable = new Executable()
-		{
-			CodeBlocks = new List<ICodeBlock>()
-		};
+			{
+				CodeBlocks = new List<ICodeBlock>()
+			};
 	}
 	(
 		cmds=commands
 		{
-			executable.CodeBlocks = $cmds.codeBlocks;
+			$executable.CodeBlocks = $cmds.codeBlocks;
 		}
 	)?	EOF
 	;
@@ -64,6 +64,17 @@ command returns [ICodeBlock codeBlock]
 		{
 			Command = $cmdName.text,
 			Arguments = $args.args
+		};
+	}
+	|	VAR_SPEC setVar=IDENT varArgs=arguments
+	{
+		List<IArgument> vargs = new List<IArgument>();
+		vargs.Add(new ConstantArgument(new GenericValue<string>($setVar.text)));
+		vargs.AddRange($varArgs.args);
+		$codeBlock = new CodeBlock()
+		{
+			Command = vargs.Count == 1 ? "get" : "set",
+			Arguments = vargs
 		};
 	}
 	;
@@ -100,7 +111,7 @@ argument returns [IArgument result]
 		}
 	|	num=NUMBER
 		{
-			$result = new ConstantArgument(new GenericValue<double>(double.Parse($result.text)));
+			$result = new ConstantArgument(new GenericValue<double>(double.Parse($num.text)));
 		}
 	|	VAR_SPEC var=IDENT
 		{

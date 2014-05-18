@@ -8,8 +8,12 @@ namespace DScript.Context
 {
     public interface IExecutable
     {
-        IEnumerable<ICodeBlock> GetCodeBlocks();
+        IEnumerable<ICodeBlock> CodeBlocks
+        {
+            get;
+            set;
+        }
 
-        void Execute(IExecutionContext context);
+        IValue Execute(IExecutionContext context);
     }
 }

@@ -9,5 +9,9 @@ namespace DScript.Context
     public interface IValue
     {
         T GetValue<T>();
+
+        bool CanConvert<T>();
+
+        Type GetValueType();
     }
 }
