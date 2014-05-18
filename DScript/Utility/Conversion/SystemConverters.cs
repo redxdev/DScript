@@ -15,6 +15,7 @@ namespace DScript.Utility.Conversion
             this.AddRelationship<int, string>((obj) => int.Parse(obj), (obj) => obj.ToString());
             this.AddRelationship<int, float>((obj) => (int)obj, (obj) => (float)obj);
             this.AddRelationship<int, double>((obj) => (int)obj, (obj) => (double)obj);
+            this.AddRelationship<int, bool>((obj) => obj ? 1 : 0, (obj) => obj != 0 ? true : false);
         }
     }
 
@@ -25,6 +26,7 @@ namespace DScript.Utility.Conversion
         {
             this.AddRelationship<float, string>((obj) => float.Parse(obj), (obj) => obj.ToString());
             this.AddRelationship<float, double>((obj) => (float)obj, (obj) => (double)obj);
+            this.AddRelationship<float, bool>((obj) => obj ? 1 : 0, (obj) => obj != 0 ? true : false);
         }
     }
 
@@ -34,6 +36,16 @@ namespace DScript.Utility.Conversion
         public DoubleConverter()
         {
             this.AddRelationship<double, string>((obj) => double.Parse(obj), (obj) => obj.ToString());
+            this.AddRelationship<double, bool>((obj) => obj ? 1 : 0, (obj) => obj != 0 ? true : false);
+        }
+    }
+
+    [Converter(ForType = typeof(bool))]
+    public class BoolConverter : BaseConverter
+    {
+        public BoolConverter()
+        {
+            this.AddRelationship<bool, string>((obj) => bool.Parse(obj), (obj) => obj.ToString());
         }
     }
 }
