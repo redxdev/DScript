@@ -42,6 +42,8 @@ namespace DScript.Context
 
         void RegisterAssembly(Assembly assembly);
 
+        void RegisterType(Type type);
+
         void UnregisterCommand(string name);
 
         IValue Execute(IExecutable executable);

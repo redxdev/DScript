@@ -109,21 +109,26 @@ namespace DScript.Context
         {
             foreach(Type type in assembly.GetTypes())
             {
-                foreach (MethodInfo methodInfo in type.GetMethods())
+                this.RegisterType(type);
+            }
+        }
+
+        public void RegisterType(Type type)
+        {
+            foreach (MethodInfo methodInfo in type.GetMethods())
+            {
+                if (!methodInfo.IsStatic)
+                    break;
+
+                foreach (CommandAttribute commandAttribute in methodInfo.GetCustomAttributes<CommandAttribute>(false))
                 {
-                    if (!methodInfo.IsStatic)
-                        break;
+                    this.RegisterCommand(commandAttribute.Name, (ScriptCommand)ScriptCommand.CreateDelegate(typeof(ScriptCommand), methodInfo));
+                }
 
-                    foreach(CommandAttribute commandAttribute in methodInfo.GetCustomAttributes<CommandAttribute>(false))
-                    {
-                        this.RegisterCommand(commandAttribute.Name, (ScriptCommand)ScriptCommand.CreateDelegate(typeof(ScriptCommand), methodInfo));
-                    }
-
-                    foreach(ContextRegistrationAttribute contextRegAttribute in methodInfo.GetCustomAttributes<ContextRegistrationAttribute>(false))
-                    {
-                        ContextRegistration contextReg = (ContextRegistration)ContextRegistration.CreateDelegate(typeof(ContextRegistration), methodInfo);
-                        contextReg(this);
-                    }
+                foreach (ContextRegistrationAttribute contextRegAttribute in methodInfo.GetCustomAttributes<ContextRegistrationAttribute>(false))
+                {
+                    ContextRegistration contextReg = (ContextRegistration)ContextRegistration.CreateDelegate(typeof(ContextRegistration), methodInfo);
+                    contextReg(this);
                 }
             }
         }
