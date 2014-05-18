@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Language\LexerErrorListener.cs" />
+    <Compile Include="Library\ConversionLibrary.cs" />
     <Compile Include="Library\IOLibrary.cs" />
+    <Compile Include="Library\MathLibrary.cs" />
     <Compile Include="Library\UtilityLibrary.cs" />
     <Compile Include="Library\LanguageLibrary.cs" />
     <Compile Include="Context\Attributes\ContextRegistrationAttribute.cs" />

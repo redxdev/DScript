@@ -54,7 +54,7 @@ namespace DScript.Utility
             return this.values;
         }
 
-        public ArgumentManager Amount(int amount)
+        public ArgumentManager Exactly(int amount)
         {
             this.preExecutionActions.AddLast(() =>
             {
@@ -67,7 +67,7 @@ namespace DScript.Utility
             return this;
         }
 
-        public ArgumentManager AmountBetween(int lower, int upper)
+        public ArgumentManager Between(int lower, int upper)
         {
             this.preExecutionActions.AddLast(() =>
                 {
@@ -134,6 +134,52 @@ namespace DScript.Utility
             });
 
             return this;
+        }
+
+        public ArgumentManager CanConvert<T1>(int start, int end, bool raw = false)
+        {
+            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
+            list.AddLast(() =>
+            {
+                for (int i = start; i < end; i++)
+                {
+                    IValue value = this.values[i];
+                    if (!value.CanConvert<T1>())
+                    {
+                        throw new ArgumentTypeException("Cannot convert argument " + i + " from " + value.GetValueType().FullName + " to " + typeof(T1).FullName);
+                    }
+                }
+            });
+
+            return this;
+        }
+
+        public ArgumentManager CanConvert<T1, T2>(int start, int end, bool raw = false)
+        {
+            LinkedList<Action> list = raw ? this.preExecutionActions : this.postExecutionActions;
+            list.AddLast(() =>
+            {
+                for (int i = start; i < end; i++)
+                {
+                    IValue value = this.values[i];
+                    if (!value.CanConvert<T1>() && !value.CanConvert<T2>())
+                    {
+                        throw new ArgumentTypeException("Cannot convert argument " + i + " from " + value.GetValueType().FullName + " to " + typeof(T1).FullName + " or " + typeof(T2).FullName);
+                    }
+                }
+            });
+
+            return this;
+        }
+
+        public ArgumentManager CanConvert<T1>(bool raw = false)
+        {
+            return this.CanConvert<T1>(0, this.arguments.Count);
+        }
+
+        public ArgumentManager CanConvert<T1, T2>(bool raw = false)
+        {
+            return this.CanConvert<T1, T2>(0, this.arguments.Count);
         }
 
         public ArgumentManager Execute()

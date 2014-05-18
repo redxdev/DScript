@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DScript.Context;
 using DScript.Context.Arguments;
+using DScript.Context.Variables;
 using DScript.Language;
 using DScript.Utility;
 
@@ -22,6 +23,12 @@ namespace DSConsole
             bool running = true;
 
             context.RegisterCommand("exit", (ctx, arguments) => { running = false; return null; });
+
+            IValue lastResult = GenericValue<object>.Default;
+            context.DefineVariable("console.last_result", new DelegatedVariable()
+                {
+                    Getter = () => lastResult
+                });
 
             while(running)
             {
@@ -51,11 +58,10 @@ namespace DSConsole
                     continue;
                 }
 
-                IValue result = null;
                 try
                 {
-                    result = context.Execute(executable);
-                    Console.WriteLine(result);
+                    lastResult = context.Execute(executable);
+                    Console.WriteLine(lastResult);
                 }
                 catch(ArgumentException e)
                 {

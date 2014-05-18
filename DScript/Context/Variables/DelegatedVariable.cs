@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DScript.Context.Variables
 {
-    public class DelegatedVariable
+    public class DelegatedVariable : IVariable
     {
         public DelegatedVariable()
         {

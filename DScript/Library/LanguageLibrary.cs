@@ -35,7 +35,7 @@ namespace DScript.Library
         public static IValue Set(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(2)
+                .Exactly(2)
                 .CanConvert<string>(0)
                 .Execute()
                 .Results();
@@ -49,7 +49,7 @@ namespace DScript.Library
         public static IValue Get(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .CanConvert<string>(0)
                 .Execute()
                 .Results();
@@ -61,7 +61,7 @@ namespace DScript.Library
         public static IValue Define(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .AmountBetween(1, 2)
+                .Between(1, 2)
                 .CanConvert<string>(0)
                 .Execute()
                 .Results();
@@ -84,7 +84,7 @@ namespace DScript.Library
         public static IValue Undefine(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .CanConvert<string>(0)
                 .Execute()
                 .Results();
@@ -98,7 +98,7 @@ namespace DScript.Library
         public static IValue IsDefined(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .Execute()
                 .CanConvert<string>(0)
                 .Results();
@@ -110,7 +110,7 @@ namespace DScript.Library
         public static IValue Block(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .CanConvert<ICodeBlock>(0)
                 .Results();
 
@@ -121,7 +121,7 @@ namespace DScript.Library
         public static IValue Build(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .CanConvert<string>(0)
                 .Execute()
                 .Results();
@@ -134,7 +134,7 @@ namespace DScript.Library
         public static IValue Execute(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Amount(1)
+                .Exactly(1)
                 .CanConvert<IExecutable, ICodeBlock>(0)
                 .Execute()
                 .Results();
