@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DScript.Context;
 using DScript.Utility.Conversion.Attributes;
 
 namespace DScript.Utility.Conversion
@@ -46,6 +47,28 @@ namespace DScript.Utility.Conversion
         public BoolConverter()
         {
             this.AddRelationship<bool, string>((obj) => bool.Parse(obj), (obj) => obj.ToString());
+        }
+    }
+
+    [Converter(ForType = typeof(IList<IValue>))]
+    public class ListConverter : BaseConverter
+    {
+        public ListConverter()
+        {
+            this.AddRelationship<IList<IValue>, string>((obj) =>
+            {
+                throw new ConversionException("Cannot convert from string to List");
+            },
+            (obj) =>
+            {
+                string[] results = new string[obj.Count];
+                for(int i = 0; i < obj.Count; i++)
+                {
+                    results[i] = obj[i].GetValue<string>();
+                }
+
+                return string.Join(", ", results);
+            });
         }
     }
 }

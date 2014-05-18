@@ -12,6 +12,8 @@ namespace DScript.Context
 
         bool CanConvert<T>();
 
+        object GetObject();
+
         Type GetValueType();
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using DScript.Context;
 using DScript.Context.Arguments;
 using DScript.Context.Attributes;
 using DScript.Context.Variables;
 using DScript.Utility;
-using System.IO;
 
 namespace DScript.Library
 {

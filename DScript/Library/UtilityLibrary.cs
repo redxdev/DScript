@@ -45,5 +45,16 @@ namespace DScript.Library
             string result = string.Join("", str);
             return new GenericValue<string>(result);
         }
+
+        [Command(Name = "typeof")]
+        public static IValue Typeof(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .Results();
+
+            return new GenericValue<Type>(args[0].GetValueType());
+        }
     }
 }

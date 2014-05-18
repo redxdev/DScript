@@ -61,7 +61,7 @@ namespace DSConsole
                 try
                 {
                     lastResult = context.Execute(executable);
-                    Console.WriteLine(lastResult);
+                    Console.WriteLine(lastResult.GetValue<string>());
                 }
                 catch(ArgumentException e)
                 {
