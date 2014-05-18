@@ -30,6 +30,17 @@ namespace DScript.Library
             return Convert<string>(context, arguments);
         }
 
+        [Command(Name = "obj_to_string")]
+        public static IValue ObjectToString(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(1)
+                .Execute()
+                .Results();
+
+            return new GenericValue<string>(args[0].ToString());
+        }
+
         [Command(Name = "to_int")]
         public static IValue ToInt(IExecutionContext context, IList<IArgument> arguments)
         {
