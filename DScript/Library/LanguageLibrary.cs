@@ -111,7 +111,7 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .CanConvert<ICodeBlock>(0)
+                .CanConvert<ICodeBlock, IExecutable>(0)
                 .Results();
 
             return args[0];

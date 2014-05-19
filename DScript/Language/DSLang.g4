@@ -118,11 +118,11 @@ variable_info returns [ICodeBlock codeBlock]
 	;
 
 function_def returns [ICodeBlock codeBlock]
-	:	FUNCTION_DEF name=IDENT BLOCK_START cmds=statements BLOCK_END
+	:	FUNCTION_DEF name=IDENT exe=code_block
 	{
 		List<IArgument> vargs = new List<IArgument>();
 		vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-		vargs.Add(new ExecutableArgument() { Executable = new Executable() { CodeBlocks = $cmds.codeBlocks } });
+		vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
 		$codeBlock = new CodeBlock()
 		{
 			Command = "define_func",
@@ -183,6 +183,13 @@ argument returns [IArgument result]
 					Variable = $var.text
 				};
 		}
+	|	block=code_block
+		{
+			$result = new ExecutableArgument()
+				{
+					Executable = $block.executable
+				};
+		}
 	|	exe=statement
 		{
 			$result = new CodeBlockArgument()
@@ -190,6 +197,16 @@ argument returns [IArgument result]
 					Code = $exe.codeBlock
 				};
 		}
+	;
+
+code_block returns [IExecutable executable]
+	:	BLOCK_START cmds=statements BLOCK_END
+	{
+		$executable = new Executable()
+			{
+				CodeBlocks = $statements.codeBlocks
+			};
+	}
 	;
 
 /*
