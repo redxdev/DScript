@@ -37,14 +37,14 @@ compileUnit returns [IExecutable executable]
 			};
 	}
 	(
-		cmds=commands
+		cmds=statements
 		{
 			$executable.CodeBlocks = $cmds.codeBlocks;
 		}
 	)?	EOF
 	;
 
-commands returns [List<ICodeBlock> codeBlocks]
+statements returns [List<ICodeBlock> codeBlocks]
 	:
 	{
 		$codeBlocks = new List<ICodeBlock>();
@@ -63,6 +63,7 @@ statement returns [ICodeBlock codeBlock]
 	|	vs=variable_set { $codeBlock = $vs.codeBlock; }
 	|	cmd=command { $codeBlock = $cmd.codeBlock; }
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
+	|	fd=function_def { $codeBlock = $fd.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -114,6 +115,20 @@ variable_info returns [ICodeBlock codeBlock]
 			$codeBlock.Command = vargs.Count == 1 ? "get" : "set";
 		}
 	)?
+	;
+
+function_def returns [ICodeBlock codeBlock]
+	:	FUNCTION_DEF name=IDENT BLOCK_START cmds=statements BLOCK_END
+	{
+		List<IArgument> vargs = new List<IArgument>();
+		vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
+		vargs.Add(new ExecutableArgument() { Executable = new Executable() { CodeBlocks = $cmds.codeBlocks } });
+		$codeBlock = new CodeBlock()
+		{
+			Command = "define_func",
+			Arguments = vargs
+		};
+	}
 	;
 
 command returns [ICodeBlock codeBlock]
@@ -170,7 +185,7 @@ argument returns [IArgument result]
 		}
 	|	exe=statement
 		{
-			$result = new ExecutableArgument()
+			$result = new CodeBlockArgument()
 				{
 					Code = $exe.codeBlock
 				};
@@ -223,6 +238,14 @@ ARGUMENT_SEPARATOR
 	:	','
 	;
 
+BLOCK_START
+	:	'{'
+	;
+
+BLOCK_END
+	:	'}'
+	;
+
 GROUP_START
 	:	'('
 	;
@@ -237,6 +260,10 @@ VAR_SPEC
 
 VAR_DEF
 	:	'var'
+	;
+
+FUNCTION_DEF
+	:	'func'
 	;
 
 EQUALS

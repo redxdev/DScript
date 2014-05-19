@@ -144,5 +144,49 @@ namespace DScript.Library
             else
                 return ctx.Execute(args[0].GetValue<ICodeBlock>());
         }
+        private static ScriptCommand CreateCommand(IExecutable executable)
+        {
+            return (ctx, arguments) =>
+            {
+                return ctx.Execute(executable);
+            };
+        }
+
+        [Command(Name = "define_func")]
+        public static IValue Function(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .AtLeast(1)
+                .Execute(0)
+                .CanConvert<string>(0)
+                .CanConvert<IExecutable, ICodeBlock>(1, arguments.Count - 1)
+                .Results();
+
+            IExecutable executable = null;
+            if (args[1].CanConvert<IExecutable>())
+                executable = args[1].GetValue<IExecutable>();
+            else
+            {
+                executable = new Executable();
+                List<ICodeBlock> codeBlocks = new List<ICodeBlock>();
+                codeBlocks.Add(args[1].GetValue<ICodeBlock>());
+                executable.CodeBlocks = codeBlocks;
+            }
+
+            ctx.RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
+
+            return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "typeof")]
+        public static IValue Typeof(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .Results();
+
+            return new GenericValue<Type>(args[0].GetValueType());
+        }
     }
 }

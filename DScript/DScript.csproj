@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Arguments\ExecutableArgument.cs" />
     <Compile Include="Language\LexerErrorListener.cs" />
     <Compile Include="Library\ConditionalLibrary.cs" />
     <Compile Include="Library\ConversionLibrary.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Context\Attributes\CommandAttribute.cs" />
     <Compile Include="Context\CodeBlock.cs" />
     <Compile Include="Context\Arguments\ConstantArgument.cs" />
-    <Compile Include="Context\Arguments\ExecutableArgument.cs" />
+    <Compile Include="Context\Arguments\CodeBlockArgument.cs" />
     <Compile Include="Context\Arguments\IArgument.cs" />
     <Compile Include="Context\CommandAlreadyDefinedException.cs" />
     <Compile Include="Context\CommandNotDefinedException.cs" />
