@@ -1,7 +1,7 @@
 DScript
 =======
 
-DScript is a simple functional (as opposed to imperative) scripting language, made to be embedded within games and
+DScript is a simple scripting language, made to be embedded within games and
 other applications. It is written in C#.
 
 Originally, DScript was meant to be a simple console command language with a few extra features, deriving from

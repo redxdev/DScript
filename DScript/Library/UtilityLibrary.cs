@@ -16,15 +16,12 @@ namespace DScript.Library
         [Command(Name = "echo")]
         public static IValue Echo(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            string[] str = new string[arguments.Count];
-            for (int i = 0; i < arguments.Count; i++)
-            {
-                str[i] = arguments[i].GetValue(ctx).ToString();
-            }
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .Results();
 
-            string result = string.Join(" ", str);
-
-            return new GenericValue<string>(result);
+            return args[0];
         }
 
         [Command(Name = "concat")]

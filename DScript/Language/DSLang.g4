@@ -183,11 +183,27 @@ argument returns [IArgument result]
 					Variable = $var.text
 				};
 		}
-	|	block=code_block
+	|	eblock=execute_block
 		{
 			$result = new ExecutableArgument()
 				{
-					Executable = $block.executable
+					Executable = $eblock.executable
+				};
+		}
+	|	cblock=code_block
+		{
+			List<IArgument> cbArgs = new List<IArgument>();
+			cbArgs.Add(new ExecutableArgument()
+				{
+					Executable = $cblock.executable
+				});
+			$result = new CodeBlockArgument()
+				{
+					Code = new CodeBlock()
+						{
+							Command = "block",
+							Arguments = cbArgs
+						}
 				};
 		}
 	|	exe=statement
@@ -200,13 +216,37 @@ argument returns [IArgument result]
 	;
 
 code_block returns [IExecutable executable]
-	:	BLOCK_START cmds=statements BLOCK_END
+	:
 	{
 		$executable = new Executable()
 			{
-				CodeBlocks = $statements.codeBlocks
+				CodeBlocks = new List<ICodeBlock>()
 			};
 	}
+		BLOCK_START
+	(
+		cmds=statements
+		{
+			$executable.CodeBlocks = $cmds.codeBlocks;
+		}
+	)? BLOCK_END
+	;
+
+execute_block returns [IExecutable executable]
+	:
+	{
+		$executable = new Executable()
+			{
+				CodeBlocks = new List<ICodeBlock>()
+			};
+	}
+		EXECUTE_START
+	(
+		cmds=statements
+		{
+			$executable.CodeBlocks = $cmds.codeBlocks;
+		}
+	)? EXECUTE_END
 	;
 
 /*
@@ -261,6 +301,14 @@ BLOCK_START
 
 BLOCK_END
 	:	'}'
+	;
+
+EXECUTE_START
+	:	'['
+	;
+
+EXECUTE_END
+	:	']'
 	;
 
 GROUP_START
