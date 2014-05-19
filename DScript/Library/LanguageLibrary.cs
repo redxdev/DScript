@@ -156,10 +156,10 @@ namespace DScript.Library
         public static IValue Function(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .AtLeast(1)
+                .Exactly(2)
                 .Execute(0)
                 .CanConvert<string>(0)
-                .CanConvert<IExecutable, ICodeBlock>(1, arguments.Count - 1)
+                .CanConvert<IExecutable, ICodeBlock>(1)
                 .Results();
 
             IExecutable executable = null;
@@ -174,6 +174,20 @@ namespace DScript.Library
             }
 
             ctx.RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
+
+            return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "undefine_func")]
+        public static IValue UndefineFunction(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .CanConvert<string>(0)
+                .Results();
+
+            ctx.UnregisterCommand(args[0].GetValue<string>());
 
             return new GenericValue<bool>(true);
         }
