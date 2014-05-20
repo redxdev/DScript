@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DScript.Context
 {
     [Serializable]
-    public class CommandAlreadyDefinedException : Exception
+    public class CommandAlreadyDefinedException : CommandException
     {
         public CommandAlreadyDefinedException()
             : base()

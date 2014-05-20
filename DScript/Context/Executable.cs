@@ -16,7 +16,7 @@ namespace DScript.Context
 
         public IValue Execute(IExecutionContext context)
         {
-            IValue last = null;
+            IValue last = GenericValue<object>.Default;
             foreach(ICodeBlock code in this.CodeBlocks)
             {
                 last = context.Execute(code);

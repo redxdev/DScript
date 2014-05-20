@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 namespace DScript.Context
 {
     [Serializable]
-    public class CommandNotDefinedException : CommandException
+    public class CommandException : Exception
     {
-        public CommandNotDefinedException()
+        public CommandException()
             : base()
         {
         }
 
-        public CommandNotDefinedException(string message)
+        public CommandException(string message)
             : base(message)
         {
         }
 
-        public CommandNotDefinedException(string message, Exception inner)
+        public CommandException(string message, Exception inner)
             : base(message, inner)
         {
         }

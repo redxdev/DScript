@@ -71,6 +71,14 @@ namespace DSConsole
                     Console.WriteLine(e.Message);
                     continue;
                 }
+                catch(CommandException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.WriteLine("Command error:");
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
                 catch(Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
