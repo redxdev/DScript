@@ -80,6 +80,29 @@ namespace DScript.Library
             return new GenericValue<bool>(true);
         }
 
+        [Command(Name = "export_define")]
+        public static IValue ExportDefine(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Between(1, 2)
+                .Execute()
+                .CanConvert<string>(0)
+                .Results();
+
+            switch (args.Length)
+            {
+                case 1:
+                    ctx.GetGlobalContext().DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = GenericValue<object>.Default });
+                    break;
+
+                case 2:
+                    ctx.GetGlobalContext().DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = args[1] });
+                    break;
+            }
+
+            return new GenericValue<bool>(true);
+        }
+
         [Command(Name = "undefine")]
         public static IValue Undefine(IExecutionContext ctx, IList<IArgument> arguments)
         {
@@ -150,7 +173,8 @@ namespace DScript.Library
         {
             return (ctx, arguments) =>
             {
-                return ctx.Execute(executable);
+                IExecutionContext localCtx = ctx.CreateChildContext();
+                return localCtx.Execute(executable);
             };
         }
 
@@ -180,6 +204,32 @@ namespace DScript.Library
             return new GenericValue<bool>(true);
         }
 
+        [Command(Name = "export_func")]
+        public static IValue ExportFunc(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(2)
+                .Execute(0)
+                .CanConvert<string>(0)
+                .CanConvert<IExecutable, ICodeBlock>(1)
+                .Results();
+
+            IExecutable executable = null;
+            if (args[1].CanConvert<IExecutable>())
+                executable = args[1].GetValue<IExecutable>();
+            else
+            {
+                executable = new Executable();
+                List<ICodeBlock> codeBlocks = new List<ICodeBlock>();
+                codeBlocks.Add(args[1].GetValue<ICodeBlock>());
+                executable.CodeBlocks = codeBlocks;
+            }
+
+            ctx.GetGlobalContext().RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
+
+            return new GenericValue<bool>(true);
+        }
+
         [Command(Name = "undefine_func")]
         public static IValue UndefineFunction(IExecutionContext ctx, IList<IArgument> arguments)
         {
@@ -192,6 +242,18 @@ namespace DScript.Library
             ctx.UnregisterCommand(args[0].GetValue<string>());
 
             return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "is_func_defined")]
+        public static IValue IsFunctionDefined(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .CanConvert<string>(0)
+                .Results();
+
+            return new GenericValue<bool>(ctx.HasCommand(args[0].GetValue<string>()));
         }
 
         [Command(Name = "typeof")]

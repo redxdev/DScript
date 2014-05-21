@@ -67,21 +67,41 @@ statement returns [ICodeBlock codeBlock]
 	;
 
 variable_def returns [ICodeBlock codeBlock]
-	:	VAR_DEF VAR_SPEC var=IDENT
-	{
-		$codeBlock = new CodeBlock()
-			{
-				Command = "define",
-				Arguments = new List<IArgument>()
-			};
-		$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
-	}
+	:
 	(
-		EQUALS arg=argument
+		VAR_DEF VAR_SPEC var=IDENT
 		{
-			$codeBlock.Arguments.Add($arg.result);
+			$codeBlock = new CodeBlock()
+				{
+					Command = "define",
+					Arguments = new List<IArgument>()
+				};
+			$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
 		}
-	)?
+		(
+			EQUALS arg=argument
+			{
+				$codeBlock.Arguments.Add($arg.result);
+			}
+		)?
+	) |
+	(
+		EXPORT_SPEC VAR_DEF VAR_SPEC var=IDENT
+		{
+			$codeBlock = new CodeBlock()
+				{
+					Command = "export_define",
+					Arguments = new List<IArgument>()
+				};
+			$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
+		}
+		(
+			EQUALS arg=argument
+			{
+				$codeBlock.Arguments.Add($arg.result);
+			}
+		)?
+	)
 	;
 
 variable_set returns [ICodeBlock codeBlock]
@@ -118,17 +138,33 @@ variable_info returns [ICodeBlock codeBlock]
 	;
 
 function_def returns [ICodeBlock codeBlock]
-	:	FUNCTION_DEF name=IDENT exe=code_block
-	{
-		List<IArgument> vargs = new List<IArgument>();
-		vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-		vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
-		$codeBlock = new CodeBlock()
+	:
+	(
+		FUNCTION_DEF name=IDENT exe=code_block
 		{
-			Command = "define_func",
-			Arguments = vargs
-		};
-	}
+			List<IArgument> vargs = new List<IArgument>();
+			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
+			vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
+			$codeBlock = new CodeBlock()
+			{
+				Command = "define_func",
+				Arguments = vargs
+			};
+		}
+	) |
+	(
+		EXPORT_SPEC FUNCTION_DEF name=IDENT exe=code_block
+		{
+			List<IArgument> vargs = new List<IArgument>();
+			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
+			vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
+			$codeBlock = new CodeBlock()
+			{
+				Command = "export_func",
+				Arguments = vargs
+			};
+		}
+	)
 	;
 
 command returns [ICodeBlock codeBlock]
@@ -329,6 +365,10 @@ VAR_DEF
 
 FUNCTION_DEF
 	:	'func'
+	;
+
+EXPORT_SPEC
+	:	'export'
 	;
 
 EQUALS

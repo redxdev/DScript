@@ -1,0 +1,19 @@
+# Recursive fibonacci number generator
+
+export var $iN = 4
+
+export func fib {
+	var $locN = $iN
+	if(lteq($locN,0),1,
+		add(
+			[
+				$iN = sub($locN,1)
+				fib()
+			],
+			[
+				$iN = sub($locN,2)
+				fib()
+			]
+		)
+	)
+}
