@@ -215,10 +215,6 @@ argument returns [IArgument result]
 		}
 	;
 
-return_stm
-	:
-	;
-
 code_block returns [IExecutable executable]
 	:
 	{
@@ -333,10 +329,6 @@ VAR_DEF
 
 FUNCTION_DEF
 	:	'func'
-	;
-
-RETURN_STM
-	:	'return'
 	;
 
 EQUALS
