@@ -15,7 +15,7 @@ namespace DSConsole
     {
         static void Main(string[] args)
         {
-            IExecutionContext context = new ExecutionContext();
+            IExecutionContext context = new ScopedExecutionContext();
             ContextUtilities.RegisterAllAssemblies(context, AppDomain.CurrentDomain);
 
             Console.WriteLine(string.Format("DScript version {0}.{1} Copyright (c) Sam Bloomberg 2014", context.GetMajorVersion(), context.GetMinorVersion()));

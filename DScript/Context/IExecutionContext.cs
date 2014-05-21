@@ -22,21 +22,27 @@ namespace DScript.Context
 
         int GetMinorVersion();
 
-        bool HasVariable(string variable);
+        IExecutionContext GetParentContext();
 
-        bool TryGetVariable(string variable, out IVariable value);
+        IExecutionContext GetGlobalContext();
 
-        IVariable GetVariable(string variable);
+        IExecutionContext CreateChildContext();
+
+        bool HasVariable(string variable, bool includeParent = true);
+
+        bool TryGetVariable(string variable, out IVariable value, bool includeParent = true);
+
+        IVariable GetVariable(string variable, bool includeParent = true);
 
         void DefineVariable(string variable, IVariable value);
 
         void UndefineVariable(string variable);
 
-        bool HasCommand(string command);
+        bool HasCommand(string command, bool includeParent = true);
 
-        bool TryGetCommand(string command, out ScriptCommand value);
+        bool TryGetCommand(string command, out ScriptCommand value, bool includeParent = true);
 
-        ScriptCommand GetCommand(string command);
+        ScriptCommand GetCommand(string command, bool includeParent = true);
 
         void RegisterCommand(string name, ScriptCommand command);
 

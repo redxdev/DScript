@@ -139,10 +139,12 @@ namespace DScript.Library
                 .CanConvert<IExecutable, ICodeBlock>(0)
                 .Results();
 
+            IExecutionContext localCtx = ctx.CreateChildContext();
+
             if (args[0].CanConvert<IExecutable>())
-                return ctx.Execute(args[0].GetValue<IExecutable>());
+                return localCtx.Execute(args[0].GetValue<IExecutable>());
             else
-                return ctx.Execute(args[0].GetValue<ICodeBlock>());
+                return localCtx.Execute(args[0].GetValue<ICodeBlock>());
         }
         private static ScriptCommand CreateCommand(IExecutable executable)
         {

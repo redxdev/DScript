@@ -21,7 +21,8 @@ namespace DScript.Context.Arguments
 
         public IValue GetValue(IExecutionContext context)
         {
-            return context.Execute(this.Code);
+            IExecutionContext localCtx = context.CreateChildContext();
+            return localCtx.Execute(this.Code);
         }
     }
 }

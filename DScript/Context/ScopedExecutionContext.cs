@@ -10,7 +10,7 @@ using DScript.Context.Attributes;
 
 namespace DScript.Context
 {
-    public class ExecutionContext : IExecutionContext
+    public class ScopedExecutionContext : IExecutionContext
     {
         public const int MajorVersion = 1;
         public const int MinorVersion = 0;
@@ -19,8 +19,17 @@ namespace DScript.Context
 
         private Dictionary<string, ScriptCommand> commands = new Dictionary<string, ScriptCommand>();
 
-        public ExecutionContext()
+        private IExecutionContext parent = null;
+
+        private IExecutionContext global = null;
+
+        public ScopedExecutionContext(IExecutionContext parent = null, IExecutionContext global = null)
         {
+            this.parent = parent;
+            this.global = global ?? this;
+
+            if (this.global == this && this.parent != null)
+                throw new ContextException("Cannot create global context with parent");
         }
 
         public int GetMajorVersion()
@@ -33,20 +42,47 @@ namespace DScript.Context
             return MinorVersion;
         }
 
-        public bool HasVariable(string variable)
+        public IExecutionContext GetParentContext()
         {
-            return this.variables.ContainsKey(variable);
+            return this.parent;
         }
 
-        public bool TryGetVariable(string variable, out IVariable value)
+        public IExecutionContext GetGlobalContext()
         {
-            return this.variables.TryGetValue(variable, out value);
+            return this.global;
         }
 
-        public IVariable GetVariable(string variable)
+        public IExecutionContext CreateChildContext()
+        {
+            return new ScopedExecutionContext(this, this.global);
+        }
+
+        public bool HasVariable(string variable, bool includeParent = true)
+        {
+            if (this.variables.ContainsKey(variable))
+                return true;
+
+            if (includeParent && this.parent != null && this.parent.HasVariable(variable))
+                return true;
+
+            return false;
+        }
+
+        public bool TryGetVariable(string variable, out IVariable value, bool includeParent = true)
+        {
+            if (this.variables.TryGetValue(variable, out value))
+                return true;
+
+            if (includeParent && this.parent != null && this.parent.TryGetVariable(variable, out value))
+                return true;
+
+            return false;
+        }
+
+        public IVariable GetVariable(string variable, bool includeParent = true)
         {
             IVariable result = null;
-            if(!this.TryGetVariable(variable, out result))
+            if(!this.TryGetVariable(variable, out result, includeParent))
             {
                 throw new VariableNotDefinedException("Variable \"" + variable + "\" is not defined");
             }
@@ -56,7 +92,7 @@ namespace DScript.Context
 
         public void DefineVariable(string variable, IVariable value)
         {
-            if(this.HasVariable(variable))
+            if(this.HasVariable(variable, false))
             {
                 throw new VariableAlreadyDefinedException("Variable \"" + variable + "\" has already been defined");
             }
@@ -66,7 +102,7 @@ namespace DScript.Context
 
         public void UndefineVariable(string variable)
         {
-            if(!this.HasVariable(variable))
+            if(!this.HasVariable(variable, false))
             {
                 throw new VariableNotDefinedException("Variable \"" + variable + "\" is not defined");
             }
@@ -74,20 +110,32 @@ namespace DScript.Context
             this.variables.Remove(variable);
         }
 
-        public bool HasCommand(string command)
+        public bool HasCommand(string command, bool includeParent = true)
         {
-            return this.commands.ContainsKey(command);
+            if (this.commands.ContainsKey(command))
+                return true;
+
+            if (includeParent && this.parent != null && this.parent.HasCommand(command))
+                return true;
+
+            return false;
         }
 
-        public bool TryGetCommand(string command, out ScriptCommand value)
+        public bool TryGetCommand(string command, out ScriptCommand value, bool includeParent = true)
         {
-            return this.commands.TryGetValue(command, out value);
+            if (this.commands.TryGetValue(command, out value))
+                return true;
+
+            if (includeParent && this.parent != null && this.parent.TryGetCommand(command, out value))
+                return true;
+
+            return false;
         }
 
-        public ScriptCommand GetCommand(string command)
+        public ScriptCommand GetCommand(string command, bool includeParent = true)
         {
             ScriptCommand result = null;
-            if(!this.TryGetCommand(command, out result))
+            if(!this.TryGetCommand(command, out result, includeParent))
             {
                 throw new CommandNotDefinedException("Command \"" + command + "\" is not defined");
             }
@@ -97,7 +145,7 @@ namespace DScript.Context
 
         public void RegisterCommand(string name, ScriptCommand command)
         {
-            if(this.HasCommand(name))
+            if(this.HasCommand(name, false))
             {
                 throw new CommandAlreadyDefinedException("Command \"" + command + "\" has already been defined");
             }
