@@ -64,7 +64,7 @@ statement returns [ICodeBlock codeBlock]
 	|	cmd=command { $codeBlock = $cmd.codeBlock; }
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
-	|	rs=return_stm { $codeBlock = $rs.codeBlock; }
+	|	bs=return_stm { $codeBlock = $bs.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -168,8 +168,8 @@ function_def returns [ICodeBlock codeBlock]
 	)
 	;
 
-return_stm returns [ICodeBlock codeBlock]
-	:	RETURN_CMD
+break_stm returns [ICodeBlock codeBlock]
+	:	BREAK_SCOPE
 	{
 		List<IArgument> rargs = new List<IArgument>();
 		$codeBlock = new CodeBlock()
@@ -390,8 +390,8 @@ EXPORT_SPEC
 	:	'export'
 	;
 
-RETURN_CMD
-	:	'return'
+BREAK_SCOPE
+	:	'break'
 	;
 
 EQUALS
