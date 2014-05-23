@@ -64,6 +64,7 @@ statement returns [ICodeBlock codeBlock]
 	|	cmd=command { $codeBlock = $cmd.codeBlock; }
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
+	|	rs=return_stm { $codeBlock = $rs.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -165,6 +166,24 @@ function_def returns [ICodeBlock codeBlock]
 			};
 		}
 	)
+	;
+
+return_stm returns [ICodeBlock codeBlock]
+	:	RETURN_CMD
+	{
+		List<IArgument> rargs = new List<IArgument>();
+		$codeBlock = new CodeBlock()
+			{
+				Command = "break_execution",
+				Arguments = rargs
+			};
+	}
+	(
+		stm=statement
+		{
+			rargs.Add(new CodeBlockArgument() { Code = $stm.codeBlock });
+		}
+	)?
 	;
 
 command returns [ICodeBlock codeBlock]
@@ -369,6 +388,10 @@ FUNCTION_DEF
 
 EXPORT_SPEC
 	:	'export'
+	;
+
+RETURN_CMD
+	:	'return'
 	;
 
 EQUALS

@@ -266,5 +266,19 @@ namespace DScript.Library
 
             return new GenericValue<Type>(args[0].GetValueType());
         }
+
+        [Command(Name = "break_execution")]
+        public static IValue BreakExecution(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Between(0, 1)
+                .Execute()
+                .Results();
+
+            IValue result = args.Length == 0 ? GenericValue<object>.Default : args[0];
+
+            ctx.BreakExecution(result);
+            return result;
+        }
     }
 }

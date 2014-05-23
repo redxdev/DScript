@@ -23,6 +23,8 @@ namespace DScript.Context
 
         private IExecutionContext global = null;
 
+        private IExecutable currentExecution = null;
+
         public ScopedExecutionContext(IExecutionContext parent = null, IExecutionContext global = null)
         {
             this.parent = parent;
@@ -191,9 +193,25 @@ namespace DScript.Context
             this.commands.Remove(name);
         }
 
+        public void BreakExecution(IValue value)
+        {
+            if(this.currentExecution != null)
+            {
+                this.currentExecution.BreakExecution(value);
+            }
+        }
+
         public IValue Execute(IExecutable executable)
         {
-            return executable.Execute(this);
+            try
+            {
+                this.currentExecution = executable;
+                return executable.Execute(this);
+            }
+            finally
+            {
+                this.currentExecution = null;
+            }
         }
 
         public IValue Execute(ICodeBlock code)

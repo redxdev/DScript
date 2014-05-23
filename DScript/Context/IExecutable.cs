@@ -14,6 +14,8 @@ namespace DScript.Context
             set;
         }
 
+        void BreakExecution(IValue value);
+
         IValue Execute(IExecutionContext context);
     }
 }
