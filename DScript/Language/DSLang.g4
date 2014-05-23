@@ -64,7 +64,7 @@ statement returns [ICodeBlock codeBlock]
 	|	cmd=command { $codeBlock = $cmd.codeBlock; }
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
-	|	bs=return_stm { $codeBlock = $bs.codeBlock; }
+	|	bs=break_stm { $codeBlock = $bs.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
