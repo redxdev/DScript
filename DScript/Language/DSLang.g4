@@ -13,7 +13,7 @@ grammar DSLang;
 	protected const int EOF = Eof;
 }
 
-@lexer::leader
+@lexer::header
 {
 	#pragma warning disable 3021
 }
