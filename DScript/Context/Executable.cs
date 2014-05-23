@@ -21,8 +21,15 @@ namespace DScript.Context
             this.returnValue = returnValue;
         }
 
+        public bool DidBreak()
+        {
+            return this.returnValue != null;
+        }
+
         public IValue Execute(IExecutionContext context)
         {
+            this.returnValue = null;
+
             IValue last = GenericValue<object>.Default;
             foreach(ICodeBlock code in this.CodeBlocks)
             {

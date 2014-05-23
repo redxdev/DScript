@@ -159,15 +159,12 @@ namespace DScript.Library
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
                 .Execute()
-                .CanConvert<IExecutable, ICodeBlock>(0)
+                .CanConvert<IExecutable>(0)
                 .Results();
 
             IExecutionContext localCtx = ctx.CreateChildContext();
 
-            if (args[0].CanConvert<IExecutable>())
-                return localCtx.Execute(args[0].GetValue<IExecutable>());
-            else
-                return localCtx.Execute(args[0].GetValue<ICodeBlock>());
+            return localCtx.Execute(args[0].GetValue<IExecutable>());
         }
         private static ScriptCommand CreateCommand(IExecutable executable)
         {
@@ -185,19 +182,10 @@ namespace DScript.Library
                 .Exactly(2)
                 .Execute(0)
                 .CanConvert<string>(0)
-                .CanConvert<IExecutable, ICodeBlock>(1)
+                .CanConvert<IExecutable>(1)
                 .Results();
 
-            IExecutable executable = null;
-            if (args[1].CanConvert<IExecutable>())
-                executable = args[1].GetValue<IExecutable>();
-            else
-            {
-                executable = new Executable();
-                List<ICodeBlock> codeBlocks = new List<ICodeBlock>();
-                codeBlocks.Add(args[1].GetValue<ICodeBlock>());
-                executable.CodeBlocks = codeBlocks;
-            }
+            IExecutable executable = args[1].GetValue<IExecutable>();
 
             ctx.RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
 
@@ -211,19 +199,10 @@ namespace DScript.Library
                 .Exactly(2)
                 .Execute(0)
                 .CanConvert<string>(0)
-                .CanConvert<IExecutable, ICodeBlock>(1)
+                .CanConvert<IExecutable>(1)
                 .Results();
 
-            IExecutable executable = null;
-            if (args[1].CanConvert<IExecutable>())
-                executable = args[1].GetValue<IExecutable>();
-            else
-            {
-                executable = new Executable();
-                List<ICodeBlock> codeBlocks = new List<ICodeBlock>();
-                codeBlocks.Add(args[1].GetValue<ICodeBlock>());
-                executable.CodeBlocks = codeBlocks;
-            }
+            IExecutable executable = args[1].GetValue<IExecutable>();
 
             ctx.GetGlobalContext().RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
 

@@ -71,4 +71,25 @@ namespace DScript.Utility.Conversion
             });
         }
     }
+
+    [Converter(ForType = typeof(IExecutable))]
+    public class ExecutableConverter : BaseConverter
+    {
+        public ExecutableConverter()
+        {
+            this.AddRelationship<IExecutable, ICodeBlock>((obj) =>
+            {
+                List<ICodeBlock> codeBlocks = new List<ICodeBlock>();
+                codeBlocks.Add(obj);
+                return new Executable()
+                    {
+                        CodeBlocks = codeBlocks
+                    };
+            },
+            (obj) =>
+            {
+                throw new ConversionException("Cannot convert from IExecutable to ICodeBlock");
+            });
+        }
+    }
 }

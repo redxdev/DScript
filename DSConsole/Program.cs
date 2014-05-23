@@ -23,6 +23,7 @@ namespace DSConsole
             bool running = true;
 
             context.RegisterCommand("exit", (ctx, arguments) => { running = false; return null; });
+            context.RegisterCommand("print", (ctx, arguments) => { Console.WriteLine(arguments[0].GetValue(ctx).GetValue<string>()); return GenericValue<object>.Default; });
 
             IValue lastResult = GenericValue<object>.Default;
             context.DefineVariable("console.last_result", new DelegatedVariable()

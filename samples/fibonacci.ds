@@ -3,16 +3,33 @@
 export var $iN = 4
 
 export func fib {
+	var $prev = -1
+	var $result = 1
+	var $sum = 0
+	
+	for(
+		var $i = 0, lt($i, $iN), $i = add($i, 1),
+		[
+			$sum = add($result, $prev)
+			$prev = $result
+			$result = $sum
+		]
+	)
+	
+	$result
+}
+
+export func fib_recursive {
 	var $locN = $iN
 	if(lteq($locN,0),1,
 		add(
 			[
 				$iN = sub($locN,1)
-				fib()
+				fib_recursive()
 			],
 			[
 				$iN = sub($locN,2)
-				fib()
+				fib_recursive()
 			]
 		)
 	)

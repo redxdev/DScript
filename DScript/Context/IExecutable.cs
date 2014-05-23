@@ -16,6 +16,8 @@ namespace DScript.Context
 
         void BreakExecution(IValue value);
 
+        bool DidBreak();
+
         IValue Execute(IExecutionContext context);
     }
 }

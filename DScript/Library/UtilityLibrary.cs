@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using DScript.Context;
 using DScript.Context.Arguments;
 using DScript.Context.Attributes;
@@ -41,6 +42,24 @@ namespace DScript.Library
 
             string result = string.Join("", str);
             return new GenericValue<string>(result);
+        }
+
+        [Command(Name = "time")]
+        public static IValue Time(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .CanConvert<IExecutable>()
+                .Results();
+
+            IExecutable execute = args[0].GetValue<IExecutable>();
+            IExecutionContext localCtx = ctx.CreateChildContext();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            execute.Execute(localCtx);
+            stopwatch.Stop();
+
+            return new GenericValue<double>(stopwatch.Elapsed.TotalSeconds);
         }
     }
 }
