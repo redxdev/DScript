@@ -193,11 +193,13 @@ namespace DScript.Context
             this.commands.Remove(name);
         }
 
-        public IValue Execute(IExecutable executable)
+        public IValue Execute(IExecutable executable, bool breakable = false)
         {
             try
             {
-                this.currentExecution = executable;
+                if(breakable)
+                    this.currentExecution = executable;
+
                 return executable.Execute(this);
             }
             finally
@@ -225,13 +227,27 @@ namespace DScript.Context
             {
                 this.currentExecution.BreakExecution(value);
             }
+            else
+            {
+                if(this.parent != null)
+                {
+                    this.parent.BreakExecution(value);
+                }
+            }
         }
 
         public void CancelExecution()
         {
-            if(this.currentExecution != null)
+            if (this.currentExecution != null)
             {
                 this.currentExecution.CancelExecution();
+            }
+            else
+            {
+                if (this.parent != null)
+                {
+                    this.parent.CancelExecution();
+                }
             }
         }
     }

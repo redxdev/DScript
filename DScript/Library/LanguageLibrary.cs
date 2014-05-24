@@ -148,7 +148,7 @@ namespace DScript.Library
             return (ctx, arguments) =>
             {
                 IExecutionContext localCtx = ctx.CreateChildContext();
-                return localCtx.Execute(executable);
+                return localCtx.Execute(executable, true);
             };
         }
 

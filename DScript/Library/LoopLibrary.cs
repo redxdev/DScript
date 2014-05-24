@@ -27,18 +27,18 @@ namespace DScript.Library
             IExecutable increment = args[2].GetValue<IExecutable>();
             IExecutable execute = args[3].GetValue<IExecutable>();
 
-            initializer.Execute(localCtx);
+            localCtx.Execute(initializer);
 
             IValue lastValue = GenericValue<object>.Default;
 
-            while(check.Execute(localCtx).GetValue<bool>())
+            while(localCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = execute.Execute(localCtx);
+                lastValue = localCtx.Execute(execute, true);
 
                 if (execute.DidBreak())
                     break;
 
-                increment.Execute(localCtx);
+                localCtx.Execute(increment);
             }
 
             return lastValue;
@@ -58,9 +58,9 @@ namespace DScript.Library
 
             IValue lastValue = GenericValue<object>.Default;
 
-            while(check.Execute(localCtx).GetValue<bool>())
+            while(localCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = execute.Execute(localCtx);
+                lastValue = localCtx.Execute(execute, true);
 
                 if (execute.DidBreak())
                     break;
@@ -85,11 +85,11 @@ namespace DScript.Library
 
             do
             {
-                lastValue = execute.Execute(localCtx);
+                lastValue = localCtx.Execute(execute);
 
                 if(execute.DidBreak())
                     break;
-            } while(check.Execute(localCtx).GetValue<bool>());
+            } while(localCtx.Execute(check).GetValue<bool>());
 
             return lastValue;
         }

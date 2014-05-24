@@ -52,7 +52,7 @@ namespace DScript.Context
 
         void UnregisterCommand(string name);
 
-        IValue Execute(IExecutable executable);
+        IValue Execute(IExecutable executable, bool breakable = false);
 
         IValue Execute(ICodeBlock code);
 
