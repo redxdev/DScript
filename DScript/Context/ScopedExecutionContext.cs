@@ -23,7 +23,7 @@ namespace DScript.Context
 
         private IExecutionContext global = null;
 
-        private IExecutable currentExecution = null;
+        private Stack<IExecutable> breakStack = new Stack<IExecutable>();
 
         public ScopedExecutionContext(IExecutionContext parent = null, IExecutionContext global = null)
         {
@@ -195,16 +195,21 @@ namespace DScript.Context
 
         public IValue Execute(IExecutable executable, bool breakable = false)
         {
-            try
+            if (breakable)
             {
-                if(breakable)
-                    this.currentExecution = executable;
-
-                return executable.Execute(this);
+                try
+                {
+                    this.breakStack.Push(executable);
+                    return executable.Execute(this);
+                }
+                finally
+                {
+                    this.breakStack.Pop();
+                }
             }
-            finally
+            else
             {
-                this.currentExecution = null;
+                return executable.Execute(this);
             }
         }
 
@@ -223,9 +228,9 @@ namespace DScript.Context
 
         public void BreakExecution(IValue value)
         {
-            if (this.currentExecution != null)
+            if (this.breakStack.Count > 0)
             {
-                this.currentExecution.BreakExecution(value);
+                this.breakStack.Peek().BreakExecution(value);
             }
             else
             {
@@ -238,9 +243,9 @@ namespace DScript.Context
 
         public void CancelExecution()
         {
-            if (this.currentExecution != null)
+            if (this.breakStack.Count > 0)
             {
-                this.currentExecution.CancelExecution();
+                this.breakStack.Peek().CancelExecution();
             }
             else
             {
