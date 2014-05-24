@@ -141,7 +141,7 @@ namespace DScript.Library
 
             IExecutionContext localCtx = ctx.CreateChildContext();
 
-            return localCtx.Execute(args[0].GetValue<IExecutable>());
+            return localCtx.Execute(args[0].GetValue<IExecutable>(), true);
         }
         private static ScriptCommand CreateCommand(IExecutable executable)
         {
@@ -275,6 +275,20 @@ namespace DScript.Library
                 .Results();
 
             return new GenericValue<IExecutionContext>(ctx.GetGlobalContext());
+        }
+
+        [Command(Name = "define_module")]
+        public static IValue DefineModule(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .Execute()
+                .CanConvert<string>()
+                .Results();
+
+            IExecutionContext parent = ctx.GetParentContext() ?? ctx;
+            parent.DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = new GenericValue<IExecutionContext>(ctx) });
+            return new GenericValue<bool>(true);
         }
     }
 }

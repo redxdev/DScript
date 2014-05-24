@@ -64,6 +64,7 @@ statement returns [ICodeBlock codeBlock]
 	|	cmd=command { $codeBlock = $cmd.codeBlock; }
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
+	|	md=module_def { $codeBlock = $md.codeBlock; }
 	|	bs=break_stm { $codeBlock = $bs.codeBlock; }
 	|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
 	|	es=export_stm { $codeBlock = $es.codeBlock; }
@@ -107,10 +108,10 @@ variable_info returns [ICodeBlock codeBlock]
 		List<IArgument> vargs = new List<IArgument>();
 		vargs.Add(new ConstantArgument(new GenericValue<string>($var.text)));
 		$codeBlock = new CodeBlock()
-		{
-			Command = "get",
-			Arguments = vargs
-		};
+			{
+				Command = "get",
+				Arguments = vargs
+			};
 	}
 	(
 		varArgs=arguments
@@ -128,9 +129,22 @@ function_def returns [ICodeBlock codeBlock]
 			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
 			vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
 			$codeBlock = new CodeBlock()
+				{
+					Command = "define_func",
+					Arguments = vargs
+				};
+		}
+	;
+
+module_def returns [ICodeBlock codeBlock]
+	:	MODULE_DEF VAR_SPEC module=IDENT
+		{
+			List<IArgument> args = new List<IArgument>();
+			args.Add(new ConstantArgument(new GenericValue<string>($module.text)));
+			$codeBlock = new CodeBlock()
 			{
-				Command = "define_func",
-				Arguments = vargs
+				Command = "define_module",
+				Arguments = args
 			};
 		}
 	;
@@ -410,6 +424,10 @@ VAR_DEF
 
 FUNCTION_DEF
 	:	'func'
+	;
+
+MODULE_DEF
+	:	'module'
 	;
 
 EXPORT_SPEC
