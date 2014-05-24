@@ -80,29 +80,6 @@ namespace DScript.Library
             return new GenericValue<bool>(true);
         }
 
-        [Command(Name = "export_define")]
-        public static IValue ExportDefine(IExecutionContext ctx, IList<IArgument> arguments)
-        {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Between(1, 2)
-                .Execute()
-                .CanConvert<string>(0)
-                .Results();
-
-            switch (args.Length)
-            {
-                case 1:
-                    ctx.GetGlobalContext().DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = GenericValue<object>.Default });
-                    break;
-
-                case 2:
-                    ctx.GetGlobalContext().DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = args[1] });
-                    break;
-            }
-
-            return new GenericValue<bool>(true);
-        }
-
         [Command(Name = "undefine")]
         public static IValue Undefine(IExecutionContext ctx, IList<IArgument> arguments)
         {
@@ -192,23 +169,6 @@ namespace DScript.Library
             return new GenericValue<bool>(true);
         }
 
-        [Command(Name = "export_func")]
-        public static IValue ExportFunc(IExecutionContext ctx, IList<IArgument> arguments)
-        {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(2)
-                .Execute(0)
-                .CanConvert<string>(0)
-                .CanConvert<IExecutable>(1)
-                .Results();
-
-            IExecutable executable = args[1].GetValue<IExecutable>();
-
-            ctx.GetGlobalContext().RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
-
-            return new GenericValue<bool>(true);
-        }
-
         [Command(Name = "undefine_func")]
         public static IValue UndefineFunction(IExecutionContext ctx, IList<IArgument> arguments)
         {
@@ -268,6 +228,31 @@ namespace DScript.Library
 
             ctx.CancelExecution();
             return GenericValue<object>.Default;
+        }
+
+        [Command(Name ="export_context")]
+        public static IValue ExportContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .CanConvert<IExecutable>()
+                .Results();
+
+            if (ctx.GetParentContext() == null)
+                throw new ContextException("Current context has no parent");
+
+            return ctx.GetParentContext().Execute(args[0].GetValue<IExecutable>());
+        }
+
+        [Command(Name = "global_context")]
+        public static IValue GlobalContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(1)
+                .CanConvert<IExecutable>()
+                .Results();
+
+            return ctx.GetGlobalContext().Execute(args[0].GetValue<IExecutable>());
         }
     }
 }

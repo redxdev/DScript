@@ -66,12 +66,12 @@ statement returns [ICodeBlock codeBlock]
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
 	|	bs=break_stm { $codeBlock = $bs.codeBlock; }
 	|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
+	|	es=export_stm { $codeBlock = $es.codeBlock; }
+	|	gs=global_stm { $codeBlock = $gs.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
-	:
-	(
-		VAR_DEF VAR_SPEC var=IDENT
+	:	VAR_DEF VAR_SPEC var=IDENT
 		{
 			$codeBlock = new CodeBlock()
 				{
@@ -86,24 +86,6 @@ variable_def returns [ICodeBlock codeBlock]
 				$codeBlock.Arguments.Add($arg.result);
 			}
 		)?
-	) |
-	(
-		EXPORT_SPEC VAR_DEF VAR_SPEC var=IDENT
-		{
-			$codeBlock = new CodeBlock()
-				{
-					Command = "export_define",
-					Arguments = new List<IArgument>()
-				};
-			$codeBlock.Arguments.Add(new ConstantArgument(new GenericValue<string>($var.text)));
-		}
-		(
-			EQUALS arg=argument
-			{
-				$codeBlock.Arguments.Add($arg.result);
-			}
-		)?
-	)
 	;
 
 variable_set returns [ICodeBlock codeBlock]
@@ -140,9 +122,7 @@ variable_info returns [ICodeBlock codeBlock]
 	;
 
 function_def returns [ICodeBlock codeBlock]
-	:
-	(
-		FUNCTION_DEF name=IDENT exe=code_block
+	:	FUNCTION_DEF name=IDENT exe=code_block
 		{
 			List<IArgument> vargs = new List<IArgument>();
 			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
@@ -153,20 +133,6 @@ function_def returns [ICodeBlock codeBlock]
 				Arguments = vargs
 			};
 		}
-	) |
-	(
-		EXPORT_SPEC FUNCTION_DEF name=IDENT exe=code_block
-		{
-			List<IArgument> vargs = new List<IArgument>();
-			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-			vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
-			$codeBlock = new CodeBlock()
-			{
-				Command = "export_func",
-				Arguments = vargs
-			};
-		}
-	)
 	;
 
 break_stm returns [ICodeBlock codeBlock]
@@ -194,6 +160,38 @@ continue_stm returns [ICodeBlock codeBlock]
 			{
 				Command = "cancel_execution",
 				Arguments = new List<IArgument>()
+			};
+	}
+	;
+
+export_stm returns [ICodeBlock codeBlock]
+	:	EXPORT_SPEC stm=statement
+	{
+		List<IArgument> args = new List<IArgument>();
+		args.Add(new CodeBlockArgument()
+			{
+				Code = $stm.codeBlock
+			});
+		$codeBlock = new CodeBlock()
+			{
+				Command = "export_context",
+				Arguments = args
+			};
+	}
+	;
+
+global_stm returns [ICodeBlock codeBlock]
+	:	GLOBAL_SPEC stm=statement
+	{
+		List<IArgument> args = new List<IArgument>();
+		args.Add(new CodeBlockArgument()
+			{
+				Code = $stm.codeBlock
+			});
+		$codeBlock = new CodeBlock()
+			{
+				Command = "global_context",
+				Arguments = args
 			};
 	}
 	;
@@ -400,6 +398,10 @@ FUNCTION_DEF
 
 EXPORT_SPEC
 	:	'export'
+	;
+
+GLOBAL_SPEC
+	:	'global'
 	;
 
 BREAK_SCOPE
