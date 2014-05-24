@@ -271,13 +271,6 @@ argument returns [IArgument result]
 		{
 			$result = new ConstantArgument(new GenericValue<double>(double.Parse($num.text)));
 		}
-	|	VAR_SPEC var=IDENT
-		{
-			$result = new VariableArgument()
-				{
-					Variable = $var.text
-				};
-		}
 	|	eblock=execute_block
 		{
 			$result = new ExecutableArgument()

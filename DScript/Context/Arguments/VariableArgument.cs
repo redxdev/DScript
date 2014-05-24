@@ -7,6 +7,7 @@ using DScript.Context.Variables;
 
 namespace DScript.Context.Arguments
 {
+    [Obsolete("Use CodeBlockArgument with the command \"get\" and a single string argument with the name of the variable")]
     public class VariableArgument : IArgument
     {
         public string Variable
