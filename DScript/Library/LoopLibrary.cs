@@ -78,8 +78,8 @@ namespace DScript.Library
                 .Results();
 
             IExecutionContext localCtx = ctx.CreateChildContext();
-            IExecutable check = args[0].GetValue<IExecutable>();
-            IExecutable execute = args[1].GetValue<IExecutable>();
+            IExecutable check = args[1].GetValue<IExecutable>();
+            IExecutable execute = args[0].GetValue<IExecutable>();
 
             IValue lastValue = GenericValue<object>.Default;
 

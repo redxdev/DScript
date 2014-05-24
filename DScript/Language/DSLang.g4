@@ -146,7 +146,7 @@ break_stm returns [ICodeBlock codeBlock]
 			};
 	}
 	(
-		stm=statement
+		EXECUTE_START stm=statement EXECUTE_END
 		{
 			rargs.Add(new CodeBlockArgument() { Code = $stm.codeBlock });
 		}
