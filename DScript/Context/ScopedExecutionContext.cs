@@ -193,14 +193,6 @@ namespace DScript.Context
             this.commands.Remove(name);
         }
 
-        public void BreakExecution(IValue value)
-        {
-            if(this.currentExecution != null)
-            {
-                this.currentExecution.BreakExecution(value);
-            }
-        }
-
         public IValue Execute(IExecutable executable)
         {
             try
@@ -225,6 +217,22 @@ namespace DScript.Context
             if (result == null)
                 result = GenericValue<object>.Default;
             return result;
+        }
+
+        public void BreakExecution(IValue value)
+        {
+            if (this.currentExecution != null)
+            {
+                this.currentExecution.BreakExecution(value);
+            }
+        }
+
+        public void CancelExecution()
+        {
+            if(this.currentExecution != null)
+            {
+                this.currentExecution.CancelExecution();
+            }
         }
     }
 }

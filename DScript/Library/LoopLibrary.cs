@@ -68,5 +68,30 @@ namespace DScript.Library
 
             return lastValue;
         }
+
+        [Command(Name = "do")]
+        public static IValue Do(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(2)
+                .CanConvert<IExecutable>()
+                .Results();
+
+            IExecutionContext localCtx = ctx.CreateChildContext();
+            IExecutable check = args[0].GetValue<IExecutable>();
+            IExecutable execute = args[1].GetValue<IExecutable>();
+
+            IValue lastValue = GenericValue<object>.Default;
+
+            do
+            {
+                lastValue = execute.Execute(localCtx);
+
+                if(execute.DidBreak())
+                    break;
+            } while(check.Execute(localCtx).GetValue<bool>());
+
+            return lastValue;
+        }
     }
 }

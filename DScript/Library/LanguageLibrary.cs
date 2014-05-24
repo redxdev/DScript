@@ -259,5 +259,15 @@ namespace DScript.Library
             ctx.BreakExecution(result);
             return result;
         }
+
+        [Command(Name = "cancel_execution")]
+        public static IValue CancelExecution(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0);
+
+            ctx.CancelExecution();
+            return GenericValue<object>.Default;
+        }
     }
 }

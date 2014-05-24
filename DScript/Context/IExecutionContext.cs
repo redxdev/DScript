@@ -52,12 +52,14 @@ namespace DScript.Context
 
         void UnregisterCommand(string name);
 
-        void BreakExecution(IValue value);
-
         IValue Execute(IExecutable executable);
 
         IValue Execute(ICodeBlock code);
 
         IValue Execute(string command, IList<IArgument> arguments);
+
+        void BreakExecution(IValue value);
+
+        void CancelExecution();
     }
 }

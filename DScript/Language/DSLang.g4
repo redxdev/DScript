@@ -65,6 +65,7 @@ statement returns [ICodeBlock codeBlock]
 	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
 	|	fd=function_def { $codeBlock = $fd.codeBlock; }
 	|	bs=break_stm { $codeBlock = $bs.codeBlock; }
+	|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -184,6 +185,17 @@ break_stm returns [ICodeBlock codeBlock]
 			rargs.Add(new CodeBlockArgument() { Code = $stm.codeBlock });
 		}
 	)?
+	;
+
+continue_stm returns [ICodeBlock codeBlock]
+	:	CONTINUE_SCOPE
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "cancel_execution",
+				Arguments = new List<IArgument>()
+			};
+	}
 	;
 
 command returns [ICodeBlock codeBlock]
@@ -392,6 +404,10 @@ EXPORT_SPEC
 
 BREAK_SCOPE
 	:	'break'
+	;
+
+CONTINUE_SCOPE
+	:	'continue'
 	;
 
 EQUALS

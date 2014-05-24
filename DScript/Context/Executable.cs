@@ -16,14 +16,26 @@ namespace DScript.Context
 
         private IValue returnValue = null;
 
+        private bool cancel = false;
+
         public void BreakExecution(IValue returnValue)
         {
             this.returnValue = returnValue;
         }
 
+        public void CancelExecution()
+        {
+            this.cancel = true;
+        }
+
         public bool DidBreak()
         {
             return this.returnValue != null;
+        }
+
+        public bool DidCancel()
+        {
+            return this.cancel;
         }
 
         public IValue Execute(IExecutionContext context)
@@ -37,6 +49,9 @@ namespace DScript.Context
 
                 if (returnValue != null)
                     return returnValue;
+
+                if (this.cancel)
+                    break;
             }
 
             return last;

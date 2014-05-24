@@ -87,5 +87,19 @@ namespace DScript.Library
 
             return new GenericValue<double>(result);
         }
+
+        [Command(Name = "mod")]
+        public static IValue Mod(IExecutionContext context, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(context, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<double>()
+                .Results();
+
+            double result = args[0].GetValue<double>() % args[1].GetValue<double>();
+
+            return new GenericValue<double>(result);
+        }
     }
 }
