@@ -170,6 +170,14 @@ export_stm returns [ICodeBlock codeBlock]
 		List<IArgument> args = new List<IArgument>();
 		args.Add(new CodeBlockArgument()
 			{
+				Code = new CodeBlock()
+					{
+						Command = "parent_context",
+						Arguments = new List<IArgument>()
+					}
+			});
+		args.Add(new CodeBlockArgument()
+			{
 				Code = $stm.codeBlock
 			});
 		$codeBlock = new CodeBlock()
@@ -186,11 +194,19 @@ global_stm returns [ICodeBlock codeBlock]
 		List<IArgument> args = new List<IArgument>();
 		args.Add(new CodeBlockArgument()
 			{
+				Code = new CodeBlock()
+					{
+						Command = "global_context",
+						Arguments = new List<IArgument>()
+					}
+			});
+		args.Add(new CodeBlockArgument()
+			{
 				Code = $stm.codeBlock
 			});
 		$codeBlock = new CodeBlock()
 			{
-				Command = "global_context",
+				Command = "export_context",
 				Arguments = args
 			};
 	}

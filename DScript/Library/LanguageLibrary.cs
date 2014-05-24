@@ -234,25 +234,47 @@ namespace DScript.Library
         public static IValue ExportContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(1)
-                .CanConvert<IExecutable>()
+                .Exactly(2)
+                .CanConvert<IExecutable>(1)
+                .Execute(0)
+                .CanConvert<IExecutionContext>(0)
                 .Results();
 
-            if (ctx.GetParentContext() == null)
-                throw new ContextException("Current context has no parent");
+            IExecutionContext exportTo = args[0].GetValue<IExecutionContext>();
+            if (exportTo == null)
+                throw new ContextException("Cannot export to a null context");
 
-            return ctx.GetParentContext().Execute(args[0].GetValue<IExecutable>());
+            return exportTo.Execute(args[1].GetValue<IExecutable>());
+        }
+
+        [Command(Name = "self_context")]
+        public static IValue GetSelfContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            return new GenericValue<IExecutionContext>(ctx);
+        }
+
+        [Command(Name = "parent_context")]
+        public static IValue GetParentContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            return new GenericValue<IExecutionContext>(ctx.GetParentContext());
         }
 
         [Command(Name = "global_context")]
-        public static IValue GlobalContext(IExecutionContext ctx, IList<IArgument> arguments)
+        public static IValue GetGlobalContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(1)
-                .CanConvert<IExecutable>()
+                .Exactly(0)
                 .Results();
 
-            return ctx.GetGlobalContext().Execute(args[0].GetValue<IExecutable>());
+            return new GenericValue<IExecutionContext>(ctx.GetGlobalContext());
         }
     }
 }
