@@ -18,9 +18,13 @@ namespace DScript.Context
 
         void CancelExecution();
 
+        void FaultBreak();
+
         bool DidBreak();
 
         bool DidCancel();
+
+        bool DidFault();
 
         IValue Execute(IExecutionContext context);
     }

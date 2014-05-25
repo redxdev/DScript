@@ -25,6 +25,8 @@ namespace DScript.Context
 
         private Stack<IExecutable> breakStack = new Stack<IExecutable>();
 
+        private Stack<IExecutable> executionStack = new Stack<IExecutable>();
+
         public ScopedExecutionContext(IExecutionContext parent = null, IExecutionContext global = null)
         {
             this.parent = parent;
@@ -195,21 +197,30 @@ namespace DScript.Context
 
         public IValue Execute(IExecutable executable, bool breakable = false)
         {
-            if (breakable)
+            try
             {
-                try
+                this.executionStack.Push(executable);
+
+                if (breakable)
                 {
-                    this.breakStack.Push(executable);
+                    try
+                    {
+                        this.breakStack.Push(executable);
+                        return executable.Execute(this);
+                    }
+                    finally
+                    {
+                        this.breakStack.Pop();
+                    }
+                }
+                else
+                {
                     return executable.Execute(this);
                 }
-                finally
-                {
-                    this.breakStack.Pop();
-                }
             }
-            else
+            finally
             {
-                return executable.Execute(this);
+                this.executionStack.Pop();
             }
         }
 
@@ -253,6 +264,14 @@ namespace DScript.Context
                 {
                     this.parent.CancelExecution();
                 }
+            }
+        }
+
+        public void FaultExecution()
+        {
+            if(this.executionStack.Count > 0)
+            {
+                this.executionStack.Peek().FaultBreak();
             }
         }
     }

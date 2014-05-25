@@ -31,6 +31,12 @@ namespace DSConsole
                     Getter = () => lastResult
                 });
 
+            Exception lastException = null;
+            context.DefineVariable("console.last_trace", new DelegatedVariable()
+                {
+                    Getter = () => new GenericValue<string>(lastException.ToString())
+                });
+
             while(running)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -48,6 +54,7 @@ namespace DSConsole
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine(e.Message);
+                    lastException = e;
                     continue;
                 }
                 catch(Exception e)
@@ -55,7 +62,8 @@ namespace DSConsole
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Encountered error while parsing input:");
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine(e.Message);
+                    lastException = e;
                     continue;
                 }
 
@@ -70,6 +78,7 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Argument error:");
                     Console.WriteLine(e.Message);
+                    lastException = e;
                     continue;
                 }
                 catch(CommandException e)
@@ -78,6 +87,7 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Command error:");
                     Console.WriteLine(e.Message);
+                    lastException = e;
                     continue;
                 }
                 catch(Exception e)
@@ -85,7 +95,8 @@ namespace DSConsole
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Encountered error while running executable:");
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine(e.Message);
+                    lastException = e;
                     continue;
                 }
             }

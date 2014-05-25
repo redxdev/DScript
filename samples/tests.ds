@@ -35,7 +35,7 @@ print("2.1: Nothing")
 for(var $i = 0, lt($i, 10), $i = add($i, 1), [break $null print($i)])
 
 # Continue
-print("2.1: Odd numbers between 0 and 9 (inclusive)")
+print("2.2: Odd numbers between 0 and 9 (inclusive)")
 for(var $i = 0, lt($i, 10), $i = add($i, 1), [if(equal(0, mod($i, 2)), continue) print($i)])
 
 echo("FINISHED")

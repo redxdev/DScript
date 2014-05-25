@@ -1,8 +1,9 @@
 # Recursive fibonacci number generator
+module $fibonacci
 
-export var $iN = 4
+var $iN = 4
 
-export func fib {
+func run {
 	var $prev = -1
 	var $result = 1
 	var $sum = 0
@@ -19,17 +20,17 @@ export func fib {
 	$result
 }
 
-export func fib_recursive {
+func run_recursive {
 	var $locN = $iN
 	if(lteq($locN,0),1,
 		add(
 			[
 				$iN = sub($locN,1)
-				fib_recursive()
+				run_recursive()
 			],
 			[
 				$iN = sub($locN,2)
-				fib_recursive()
+				run_recursive()
 			]
 		)
 	)

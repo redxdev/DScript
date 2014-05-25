@@ -69,6 +69,9 @@ statement returns [ICodeBlock codeBlock]
 	|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
 	|	es=export_stm { $codeBlock = $es.codeBlock; }
 	|	gs=global_stm { $codeBlock = $gs.codeBlock; }
+	|	pc=parent_ctx { $codeBlock = $pc.codeBlock; }
+	|	gc=global_ctx { $codeBlock = $gc.codeBlock; }
+	|	sc=self_ctx {$codeBlock = $sc.codeBlock; }
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -179,16 +182,26 @@ continue_stm returns [ICodeBlock codeBlock]
 	;
 
 export_stm returns [ICodeBlock codeBlock]
-	:	EXPORT_SPEC stm=statement
+	:	EXPORT_SPEC
+	{
+		ICodeBlock ctxBlock = new CodeBlock()
+			{
+				Command = "parent_context",
+				Arguments = new List<IArgument>()
+			};
+	}
+	(
+		EXECUTE_START ctxStm=statement EXECUTE_END
+		{
+			ctxBlock = $ctxStm.codeBlock;
+		}
+	)?
+		stm=statement
 	{
 		List<IArgument> args = new List<IArgument>();
 		args.Add(new CodeBlockArgument()
 			{
-				Code = new CodeBlock()
-					{
-						Command = "parent_context",
-						Arguments = new List<IArgument>()
-					}
+				Code = ctxBlock
 			});
 		args.Add(new CodeBlockArgument()
 			{
@@ -222,6 +235,39 @@ global_stm returns [ICodeBlock codeBlock]
 			{
 				Command = "export_context",
 				Arguments = args
+			};
+	}
+	;
+
+parent_ctx returns [ICodeBlock codeBlock]
+	:	PARENT_SPEC
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "parent_context",
+				Arguments = new List<IArgument>()
+			};
+	}
+	;
+
+global_ctx returns [ICodeBlock codeBlock]
+	:	GLOBAL_SPEC
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "global_context",
+				Arguments = new List<IArgument>()
+			};
+	}
+	;
+
+self_ctx returns [ICodeBlock codeBlock]
+	:	SELF_SPEC
+	{
+		$codeBlock = new CodeBlock()
+			{
+				Command = "self_context",
+				Arguments = new List<IArgument>()
 			};
 	}
 	;
@@ -427,8 +473,16 @@ EXPORT_SPEC
 	:	'export'
 	;
 
+PARENT_SPEC
+	:	'parent'
+	;
+
 GLOBAL_SPEC
 	:	'global'
+	;
+
+SELF_SPEC
+	:	'self'
 	;
 
 BREAK_SCOPE

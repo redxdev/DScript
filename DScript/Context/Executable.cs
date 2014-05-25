@@ -18,6 +18,8 @@ namespace DScript.Context
 
         private bool cancel = false;
 
+        private bool fault = false;
+
         public void BreakExecution(IValue returnValue)
         {
             this.returnValue = returnValue;
@@ -26,6 +28,11 @@ namespace DScript.Context
         public void CancelExecution()
         {
             this.cancel = true;
+        }
+
+        public void FaultBreak()
+        {
+            this.fault = true;
         }
 
         public bool DidBreak()
@@ -38,10 +45,16 @@ namespace DScript.Context
             return this.cancel;
         }
 
+        public bool DidFault()
+        {
+            return this.fault;
+        }
+
         public IValue Execute(IExecutionContext context)
         {
             this.returnValue = null;
             this.cancel = false;
+            this.fault = false;
 
             IValue last = GenericValue<object>.Default;
             foreach(ICodeBlock code in this.CodeBlocks)
@@ -53,6 +66,9 @@ namespace DScript.Context
 
                 if (this.cancel)
                     break;
+
+                if (this.fault)
+                    throw new ContextException("Execution fault (fault break)");
             }
 
             return last;

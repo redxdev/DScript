@@ -224,9 +224,21 @@ namespace DScript.Library
         public static IValue CancelExecution(IExecutionContext ctx, IList<IArgument> arguments)
         {
             CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(0);
+                .Exactly(0)
+                .Results();
 
             ctx.CancelExecution();
+            return GenericValue<object>.Default;
+        }
+
+        [Command(Name = "fault_execution")]
+        public static IValue FaultExecution(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            ctx.FaultExecution();
             return GenericValue<object>.Default;
         }
 
@@ -289,6 +301,16 @@ namespace DScript.Library
             IExecutionContext parent = ctx.GetParentContext() ?? ctx;
             parent.DefineVariable(args[0].GetValue<string>(), new BasicVariable() { Value = new GenericValue<IExecutionContext>(ctx) });
             return new GenericValue<bool>(true);
+        }
+
+        [Command(Name = "create_context")]
+        public static IValue CreateContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            return new GenericValue<IExecutionContext>(ctx.CreateChildContext());
         }
     }
 }

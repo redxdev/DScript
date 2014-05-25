@@ -61,5 +61,7 @@ namespace DScript.Context
         void BreakExecution(IValue value);
 
         void CancelExecution();
+
+        void FaultExecution();
     }
 }
