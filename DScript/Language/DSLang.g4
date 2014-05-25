@@ -126,15 +126,30 @@ variable_info returns [ICodeBlock codeBlock]
 	;
 
 function_def returns [ICodeBlock codeBlock]
-	:	FUNCTION_DEF name=IDENT exe=code_block
+	:	FUNCTION_DEF name=IDENT
+	{
+		List<IArgument> paramArgs = new List<IArgument>();
+	}
+	(
+		GROUP_START
+		(
+			VAR_SPEC argName=IDENT
+			{
+				paramArgs.Add(new ConstantArgument(new GenericValue<string>($argName.text)));
+			}
+		)*
+		GROUP_END
+	)?
+		exe=code_block
 		{
-			List<IArgument> vargs = new List<IArgument>();
-			vargs.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-			vargs.Add(new ExecutableArgument() { Executable = $exe.executable });
+			List<IArgument> args = new List<IArgument>();
+			args.Add(new ConstantArgument(new GenericValue<string>($name.text)));
+			args.Add(new ExecutableArgument() { Executable = $exe.executable });
+			args.AddRange(paramArgs);
 			$codeBlock = new CodeBlock()
 				{
 					Command = "define_func",
-					Arguments = vargs
+					Arguments = args
 				};
 		}
 	;

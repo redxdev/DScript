@@ -1,15 +1,13 @@
 # Recursive fibonacci number generator
 module $fibonacci
 
-var $iN = 4
-
-func run {
-	var $prev = -1
+func run($n) {
+	var $prev = 1
 	var $result = 1
 	var $sum = 0
 	
 	for(
-		var $i = 0, lt($i, $iN), $i = add($i, 1),
+		var $i = 0, lt($i, $n), $i = add($i, 1),
 		[
 			$sum = add($result, $prev)
 			$prev = $result
@@ -20,17 +18,14 @@ func run {
 	$result
 }
 
-func run_recursive {
-	var $locN = $iN
-	if(lteq($locN,0),1,
+func run_recursive($n) {
+	if(lteq($n,0),1,
 		add(
 			[
-				$iN = sub($locN,1)
-				run_recursive()
+				run_recursive(sub($n,1))
 			],
 			[
-				$iN = sub($locN,2)
-				run_recursive()
+				run_recursive(sub($n,2))
 			]
 		)
 	)

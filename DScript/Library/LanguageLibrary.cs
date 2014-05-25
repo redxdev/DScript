@@ -143,11 +143,21 @@ namespace DScript.Library
 
             return localCtx.Execute(args[0].GetValue<IExecutable>(), true);
         }
-        private static ScriptCommand CreateCommand(IExecutable executable)
+        private static ScriptCommand CreateCommand(IExecutable executable, IList<string> argumentNames)
         {
             return (ctx, arguments) =>
             {
+                var args = CommandUtilities.ManageArguments(ctx, arguments)
+                    .Exactly(argumentNames.Count)
+                    .Execute()
+                    .Results();
+
                 IExecutionContext localCtx = ctx.CreateChildContext();
+                for (int i = 0; i < args.Length; i++)
+                {
+                    localCtx.DefineVariable(argumentNames[i], new BasicVariable() { Value = args[i] });
+                }
+
                 return localCtx.Execute(executable, true);
             };
         }
@@ -156,15 +166,23 @@ namespace DScript.Library
         public static IValue Function(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(2)
+                .AtLeast(2)
                 .Execute(0)
+                .Execute(2, arguments.Count - 1)
                 .CanConvert<string>(0)
                 .CanConvert<IExecutable>(1)
+                .CanConvert<string>(2, arguments.Count - 1)
                 .Results();
 
             IExecutable executable = args[1].GetValue<IExecutable>();
 
-            ctx.RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable));
+            List<string> argNames = new List<string>();
+            for (int i = 2; i < args.Length; i++)
+            {
+                argNames.Add(args[i].GetValue<string>());
+            }
+
+            ctx.RegisterCommand(args[0].GetValue<string>(), CreateCommand(executable, argNames));
 
             return new GenericValue<bool>(true);
         }
