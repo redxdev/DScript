@@ -230,9 +230,18 @@ export_stm returns [ICodeBlock codeBlock]
 			{
 				Code = ctxBlock
 			});
-		args.Add(new CodeBlockArgument()
+		List<IArgument> cbArgs = new List<IArgument>();
+		cbArgs.Add(new CodeBlockArgument()
 			{
 				Code = $stm.codeBlock
+			});
+		args.Add(new CodeBlockArgument()
+			{
+				Code = new CodeBlock()
+					{
+						Command = "block",
+						Arguments = cbArgs
+					}
 			});
 		$codeBlock = new CodeBlock()
 			{

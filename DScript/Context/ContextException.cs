@@ -24,4 +24,23 @@ namespace DScript.Context
         {
         }
     }
+
+    [Serializable]
+    public class FaultException : ContextException
+    {
+        public FaultException()
+            : base()
+        {
+        }
+
+        public FaultException(string message)
+            : base(message)
+        {
+        }
+
+        public FaultException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
 }

@@ -68,7 +68,7 @@ namespace DScript.Context
                     break;
 
                 if (this.fault)
-                    throw new ContextException("Execution fault (fault break)");
+                    throw new FaultException("Execution fault (fault break)");
             }
 
             return last;

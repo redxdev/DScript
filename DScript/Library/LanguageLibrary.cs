@@ -264,9 +264,9 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(2)
-                .CanConvert<IExecutable>(1)
-                .Execute(0)
+                .Execute()
                 .CanConvert<IExecutionContext>(0)
+                .CanConvert<IExecutable>(1)
                 .Results();
 
             IExecutionContext exportTo = args[0].GetValue<IExecutionContext>();
