@@ -144,7 +144,19 @@ function_def returns [ICodeBlock codeBlock]
 		{
 			List<IArgument> args = new List<IArgument>();
 			args.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-			args.Add(new ExecutableArgument() { Executable = $exe.executable });
+			List<IArgument> cbArgs = new List<IArgument>();
+			cbArgs.Add(new ExecutableArgument()
+				{
+					Executable = $exe.executable
+				});
+			args.Add(new CodeBlockArgument()
+				{
+					Code = new CodeBlock()
+						{
+							Command = "block",
+							Arguments = cbArgs
+						}
+				});
 			args.AddRange(paramArgs);
 			$codeBlock = new CodeBlock()
 				{

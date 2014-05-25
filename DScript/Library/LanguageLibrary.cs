@@ -167,8 +167,7 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .AtLeast(2)
-                .Execute(0)
-                .Execute(2, arguments.Count - 1)
+                .Execute()
                 .CanConvert<string>(0)
                 .CanConvert<IExecutable>(1)
                 .CanConvert<string>(2, arguments.Count - 1)
