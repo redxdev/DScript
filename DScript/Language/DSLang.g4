@@ -82,7 +82,7 @@ statement returns [ICodeBlock codeBlock]
 			args.Add(new ConstantArgument(new GenericValue<ICodeBlock>($call.codeBlock)));
 			ICodeBlock call = new CodeBlock()
 				{
-					Command = "call_context",
+					Command = "export_context",
 					Arguments = args
 				};
 			$codeBlock = call;
