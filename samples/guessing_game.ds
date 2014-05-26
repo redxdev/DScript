@@ -1,24 +1,26 @@
 # Classic guessing game
 
+var $c = $console
+
 var $value = rand_int(0, 100)
 var $numTries = to_int(0)
 
-print("I have picked a number between 0 and 99")
+$c.print("I have picked a number between 0 and 99")
 var $lastGuess = -1
 while(
 	not(equal($lastGuess, $value)),
 	[
-		print("Take a guess:")
-		$lastGuess = to_int(readline())
+		$c.print("Take a guess:")
+		$lastGuess = to_int($c.readline())
 		$numTries = add($numTries, 1)
 		
 		if(
 			not(equal($lastGuess, $value)),
 			[
-				if(lt($lastGuess, $value), print("Too low!"), print("Too high!"))
+				if(lt($lastGuess, $value), $c.print("Too low!"), $c.print("Too high!"))
 			]
 		)
 	]
 )
 
-print(concat(concat("You got it! It only took you ", $numTries), " tries."))
+$c.print(concat(concat("You got it! It only took you ", $numTries), " tries."))

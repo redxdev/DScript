@@ -19,24 +19,24 @@ namespace DSConsole
             set;
         }
 
-        static void Main(string[] args)
+        public static IValue LastResult
+        {
+            get;
+            set;
+        }
+
+        public static Exception LastException
+        {
+            get;
+            set;
+        }
+
+        public static void Main(string[] args)
         {
             Running = true;
 
             IExecutionContext context = new ScopedExecutionContext();
             ContextUtilities.RegisterAllAssemblies(context, AppDomain.CurrentDomain);
-
-            IValue lastResult = GenericValue<object>.Default;
-            context.DefineVariable("console_last_result", new DelegatedVariable()
-            {
-                Getter = () => lastResult
-            });
-
-            Exception lastException = null;
-            context.DefineVariable("console_last_exception", new DelegatedVariable()
-            {
-                Getter = () => new GenericValue<string>(lastException.ToString())
-            });
 
             Console.WriteLine(string.Format("DScript version {0}.{1} Copyright (c) Sam Bloomberg 2014", context.GetMajorVersion(), context.GetMinorVersion()));
 
@@ -57,7 +57,7 @@ namespace DSConsole
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine(e.Message);
-                    lastException = e;
+                    LastException = e;
                     continue;
                 }
                 catch(Exception e)
@@ -66,14 +66,14 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Encountered error while parsing input:");
                     Console.WriteLine(e.Message);
-                    lastException = e;
+                    LastException = e;
                     continue;
                 }
 
                 try
                 {
-                    lastResult = context.Execute(executable);
-                    Console.WriteLine(lastResult.GetValue<string>());
+                    LastResult = context.Execute(executable);
+                    Console.WriteLine(LastResult.GetValue<string>());
                 }
                 catch(ArgumentException e)
                 {
@@ -81,7 +81,7 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Argument error:");
                     Console.WriteLine(e.Message);
-                    lastException = e;
+                    LastException = e;
                     continue;
                 }
                 catch(CommandException e)
@@ -90,7 +90,7 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Command error:");
                     Console.WriteLine(e.Message);
-                    lastException = e;
+                    LastException = e;
                     continue;
                 }
                 catch(Exception e)
@@ -99,7 +99,7 @@ namespace DSConsole
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.WriteLine("Encountered error while running executable:");
                     Console.WriteLine(e.Message);
-                    lastException = e;
+                    LastException = e;
                     continue;
                 }
             }

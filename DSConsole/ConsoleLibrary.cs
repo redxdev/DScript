@@ -11,6 +11,7 @@ using DScript.Utility;
 
 namespace DSConsole
 {
+    [Module(Name = "console")]
     public static class ConsoleLibrary
     {
         [Command(Name = "exit")]
@@ -46,6 +47,26 @@ namespace DSConsole
                 .Results();
 
             return new GenericValue<string>(Console.ReadLine());
+        }
+
+        [Command(Name = "result")]
+        public static IValue Result(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            return Program.LastResult;
+        }
+
+        [Command(Name = "exception")]
+        public static IValue Exception(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(0)
+                .Results();
+
+            return new GenericValue<string>(Program.LastException.ToString());
         }
     }
 }

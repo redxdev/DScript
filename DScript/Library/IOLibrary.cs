@@ -21,7 +21,7 @@ namespace DScript.Library
             ctx.DefineVariable("cwd", new ConstantVariable(new GenericValue<string>(Directory.GetCurrentDirectory())));
         }
 
-        [Command(Name = "read_file")]
+        [Command(Name = "readfile")]
         public static IValue ReadFile(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
