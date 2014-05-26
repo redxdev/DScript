@@ -59,19 +59,35 @@ statements returns [List<ICodeBlock> codeBlocks]
 
 statement returns [ICodeBlock codeBlock]
 	:
-		vd=variable_def { $codeBlock = $vd.codeBlock; }
-	|	vs=variable_set { $codeBlock = $vs.codeBlock; }
-	|	cmd=command { $codeBlock = $cmd.codeBlock; }
-	|	vi=variable_info { $codeBlock = $vi.codeBlock; }
-	|	fd=function_def { $codeBlock = $fd.codeBlock; }
-	|	md=module_def { $codeBlock = $md.codeBlock; }
-	|	bs=break_stm { $codeBlock = $bs.codeBlock; }
-	|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
-	|	es=export_stm { $codeBlock = $es.codeBlock; }
-	|	gs=global_stm { $codeBlock = $gs.codeBlock; }
-	|	pc=parent_ctx { $codeBlock = $pc.codeBlock; }
-	|	gc=global_ctx { $codeBlock = $gc.codeBlock; }
-	|	sc=self_ctx {$codeBlock = $sc.codeBlock; }
+	(
+			vd=variable_def { $codeBlock = $vd.codeBlock; }
+		|	vs=variable_set { $codeBlock = $vs.codeBlock; }
+		|	cmd=command { $codeBlock = $cmd.codeBlock; }
+		|	vi=variable_info { $codeBlock = $vi.codeBlock; }
+		|	fd=function_def { $codeBlock = $fd.codeBlock; }
+		|	md=module_def { $codeBlock = $md.codeBlock; }
+		|	bs=break_stm { $codeBlock = $bs.codeBlock; }
+		|	cs=continue_stm { $codeBlock = $cs.codeBlock; }
+		|	es=export_stm { $codeBlock = $es.codeBlock; }
+		|	gs=global_stm { $codeBlock = $gs.codeBlock; }
+		|	pc=parent_ctx { $codeBlock = $pc.codeBlock; }
+		|	gc=global_ctx { $codeBlock = $gc.codeBlock; }
+		|	sc=self_ctx {$codeBlock = $sc.codeBlock; }
+	)
+	(
+		'.' call=statement
+		{
+			List<IArgument> args = new List<IArgument>();
+			args.Add(new CodeBlockArgument() { Code = $codeBlock });
+			args.Add(new ConstantArgument(new GenericValue<ICodeBlock>($call.codeBlock)));
+			ICodeBlock call = new CodeBlock()
+				{
+					Command = "call_context",
+					Arguments = args
+				};
+			$codeBlock = call;
+		}
+	)?
 	;
 
 variable_def returns [ICodeBlock codeBlock]
@@ -506,6 +522,10 @@ CONTINUE_SCOPE
 
 EQUALS
 	:	'='
+	;
+
+CONTEXT_ENTER
+	:	'.'
 	;
 
 IDENT
