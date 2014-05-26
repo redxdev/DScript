@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DScript.Context.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class CommandAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class ModuleAttribute : Attribute
     {
         public string Name
         {

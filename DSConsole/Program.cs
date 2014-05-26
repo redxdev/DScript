@@ -26,19 +26,19 @@ namespace DSConsole
             IExecutionContext context = new ScopedExecutionContext();
             ContextUtilities.RegisterAllAssemblies(context, AppDomain.CurrentDomain);
 
-            Console.WriteLine(string.Format("DScript version {0}.{1} Copyright (c) Sam Bloomberg 2014", context.GetMajorVersion(), context.GetMinorVersion()));
-
             IValue lastResult = GenericValue<object>.Default;
-            context.DefineVariable("console.last_result", new DelegatedVariable()
-                {
-                    Getter = () => lastResult
-                });
+            context.DefineVariable("console_last_result", new DelegatedVariable()
+            {
+                Getter = () => lastResult
+            });
 
             Exception lastException = null;
-            context.DefineVariable("console.last_trace", new DelegatedVariable()
-                {
-                    Getter = () => new GenericValue<string>(lastException.ToString())
-                });
+            context.DefineVariable("console_last_exception", new DelegatedVariable()
+            {
+                Getter = () => new GenericValue<string>(lastException.ToString())
+            });
+
+            Console.WriteLine(string.Format("DScript version {0}.{1} Copyright (c) Sam Bloomberg 2014", context.GetMajorVersion(), context.GetMinorVersion()));
 
             while(Running)
             {

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\Arguments\ExecutableArgument.cs" />
+    <Compile Include="Context\Attributes\ModuleAttribute.cs" />
     <Compile Include="Context\CommandException.cs" />
     <Compile Include="Context\ContextException.cs" />
     <Compile Include="Language\LexerErrorListener.cs" />

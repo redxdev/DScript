@@ -7,6 +7,7 @@ using System.Reflection;
 using DScript.Context.Variables;
 using DScript.Context.Arguments;
 using DScript.Context.Attributes;
+using DScript.Utility;
 
 namespace DScript.Context
 {
@@ -167,20 +168,27 @@ namespace DScript.Context
 
         public void RegisterType(Type type)
         {
+            IExecutionContext module = this;
+
+            foreach(ModuleAttribute modAttr in type.GetCustomAttributes<ModuleAttribute>())
+            {
+                module = ContextUtilities.CreateEmptyModule(this, modAttr.Name);
+            }
+
             foreach (MethodInfo methodInfo in type.GetMethods())
             {
                 if (!methodInfo.IsStatic)
                     break;
 
-                foreach (CommandAttribute commandAttribute in methodInfo.GetCustomAttributes<CommandAttribute>(false))
-                {
-                    this.RegisterCommand(commandAttribute.Name, (ScriptCommand)ScriptCommand.CreateDelegate(typeof(ScriptCommand), methodInfo));
-                }
-
                 foreach (ContextRegistrationAttribute contextRegAttribute in methodInfo.GetCustomAttributes<ContextRegistrationAttribute>(false))
                 {
                     ContextRegistration contextReg = (ContextRegistration)ContextRegistration.CreateDelegate(typeof(ContextRegistration), methodInfo);
-                    contextReg(this);
+                    contextReg(module);
+                }
+
+                foreach (CommandAttribute commandAttribute in methodInfo.GetCustomAttributes<CommandAttribute>(false))
+                {
+                    module.RegisterCommand(commandAttribute.Name, (ScriptCommand)ScriptCommand.CreateDelegate(typeof(ScriptCommand), methodInfo));
                 }
             }
         }

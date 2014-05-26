@@ -12,15 +12,16 @@ using DScript.Utility;
 
 namespace DScript.Library
 {
+    [Module(Name = "io")]
     public static class IOLibrary
     {
         [ContextRegistration]
         public static void ContextRegistration(IExecutionContext ctx)
         {
-            ctx.DefineVariable("io_cwd", new ConstantVariable(new GenericValue<string>(Directory.GetCurrentDirectory())));
+            ctx.DefineVariable("cwd", new ConstantVariable(new GenericValue<string>(Directory.GetCurrentDirectory())));
         }
 
-        [Command(Name = "io_read_file")]
+        [Command(Name = "read_file")]
         public static IValue ReadFile(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
