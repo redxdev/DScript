@@ -13,6 +13,8 @@ namespace DScript.Library
 {
     public static class MathLibrary
     {
+        private static Random random = new Random();
+
         [ContextRegistration]
         public static void ContextRegistration(IExecutionContext context)
         {
@@ -100,6 +102,46 @@ namespace DScript.Library
             double result = args[0].GetValue<double>() % args[1].GetValue<double>();
 
             return new GenericValue<double>(result);
+        }
+
+        [Command(Name = "rand_seed")]
+        public static IValue RandSeed(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Between(0, 1)
+                .Execute()
+                .CanConvert<int>()
+                .Results();
+
+            if(args.Length == 0)
+            {
+                random = new Random();
+            }
+            else
+            {
+                random = new Random(args[0].GetValue<int>());
+            }
+
+            return GenericValue<object>.Default;
+        }
+
+        [Command(Name = "rand_int")]
+        public static IValue RandInt(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Between(0, 2)
+                .Results();
+
+            if (args.Length > 0)
+            {
+                int min = args.Length == 1 ? 0 : args[0].GetValue<int>();
+                int max = args.Length == 1 ? args[0].GetValue<int>() : args[1].GetValue<int>();
+                return new GenericValue<int>(random.Next(min, max));
+            }
+            else
+            {
+                return new GenericValue<int>(random.Next());
+            }
         }
     }
 }

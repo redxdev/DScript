@@ -96,6 +96,9 @@ namespace DScript.Utility
         {
             this.actions.AddLast(() =>
                 {
+                    if (index >= this.values.Length)
+                        return;
+
                     IValue value = this.values[index];
                     if (!value.CanConvert<T1>())
                     {
@@ -110,6 +113,9 @@ namespace DScript.Utility
         {
             this.actions.AddLast(() =>
             {
+                if (index >= this.values.Length)
+                    return;
+
                 IValue value = this.values[index];
                 if (!value.CanConvert<T1>() && !value.CanConvert<T2>())
                 {
