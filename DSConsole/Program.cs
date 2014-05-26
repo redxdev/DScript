@@ -13,17 +13,20 @@ namespace DSConsole
 {
     class Program
     {
+        public static bool Running
+        {
+            get;
+            set;
+        }
+
         static void Main(string[] args)
         {
+            Running = true;
+
             IExecutionContext context = new ScopedExecutionContext();
             ContextUtilities.RegisterAllAssemblies(context, AppDomain.CurrentDomain);
 
             Console.WriteLine(string.Format("DScript version {0}.{1} Copyright (c) Sam Bloomberg 2014", context.GetMajorVersion(), context.GetMinorVersion()));
-
-            bool running = true;
-
-            context.RegisterCommand("exit", (ctx, arguments) => { running = false; return null; });
-            context.RegisterCommand("print", (ctx, arguments) => { Console.WriteLine(arguments[0].GetValue(ctx).GetValue<string>()); return GenericValue<object>.Default; });
 
             IValue lastResult = GenericValue<object>.Default;
             context.DefineVariable("console.last_result", new DelegatedVariable()
@@ -37,7 +40,7 @@ namespace DSConsole
                     Getter = () => new GenericValue<string>(lastException.ToString())
                 });
 
-            while(running)
+            while(Running)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.BackgroundColor = ConsoleColor.Black;
