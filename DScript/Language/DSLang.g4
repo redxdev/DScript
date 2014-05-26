@@ -149,14 +149,7 @@ function_def returns [ICodeBlock codeBlock]
 				{
 					Executable = $exe.executable
 				});
-			args.Add(new CodeBlockArgument()
-				{
-					Code = new CodeBlock()
-						{
-							Command = "block",
-							Arguments = cbArgs
-						}
-				});
+			args.Add(new ConstantArgument(new GenericValue<IExecutable>($exe.executable)));
 			args.AddRange(paramArgs);
 			$codeBlock = new CodeBlock()
 				{
@@ -171,11 +164,12 @@ module_def returns [ICodeBlock codeBlock]
 		{
 			List<IArgument> args = new List<IArgument>();
 			args.Add(new ConstantArgument(new GenericValue<string>($module.text)));
+
 			$codeBlock = new CodeBlock()
-			{
-				Command = "define_module",
-				Arguments = args
-			};
+				{
+					Command = "define_module",
+					Arguments = args
+				};
 		}
 	;
 
@@ -230,19 +224,7 @@ export_stm returns [ICodeBlock codeBlock]
 			{
 				Code = ctxBlock
 			});
-		List<IArgument> cbArgs = new List<IArgument>();
-		cbArgs.Add(new CodeBlockArgument()
-			{
-				Code = $stm.codeBlock
-			});
-		args.Add(new CodeBlockArgument()
-			{
-				Code = new CodeBlock()
-					{
-						Command = "block",
-						Arguments = cbArgs
-					}
-			});
+		args.Add(new ConstantArgument(new GenericValue<ICodeBlock>($stm.codeBlock)));
 		$codeBlock = new CodeBlock()
 			{
 				Command = "export_context",
@@ -367,14 +349,7 @@ argument returns [IArgument result]
 				{
 					Executable = $cblock.executable
 				});
-			$result = new CodeBlockArgument()
-				{
-					Code = new CodeBlock()
-						{
-							Command = "block",
-							Arguments = cbArgs
-						}
-				};
+			$result = new ConstantArgument(new GenericValue<IExecutable>($cblock.executable));
 		}
 	|	exe=statement
 		{
@@ -534,7 +509,7 @@ EQUALS
 	;
 
 IDENT
-	:	([a-zA-Z] | '_') ([0-9a-zA-Z] | '.' | '-' | '_')*
+	:	([a-zA-Z] | '_') ([0-9a-zA-Z] | '-' | '_')*
 	;
 
 WS

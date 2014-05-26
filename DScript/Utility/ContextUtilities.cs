@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using DScript.Context;
+using DScript.Context.Variables;
 
 namespace DScript.Utility
 {
@@ -16,6 +17,13 @@ namespace DScript.Utility
             {
                 context.RegisterAssembly(assembly);
             }
+        }
+
+        public static IExecutionContext CreateEmptyModule(IExecutionContext ctx, string name)
+        {
+            IExecutionContext module = ctx.CreateChildContext();
+            ctx.DefineVariable(name, new ConstantVariable(new GenericValue<IExecutionContext>(module)));
+            return module;
         }
     }
 }

@@ -17,10 +17,10 @@ namespace DScript.Library
         [ContextRegistration]
         public static void ContextRegistration(IExecutionContext ctx)
         {
-            ctx.DefineVariable("io.cwd", new ConstantVariable(new GenericValue<string>(Directory.GetCurrentDirectory())));
+            ctx.DefineVariable("io_cwd", new ConstantVariable(new GenericValue<string>(Directory.GetCurrentDirectory())));
         }
 
-        [Command(Name = "io.read_file")]
+        [Command(Name = "io_read_file")]
         public static IValue ReadFile(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
