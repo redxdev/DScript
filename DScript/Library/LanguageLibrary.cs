@@ -276,6 +276,31 @@ namespace DScript.Library
             return exportTo.Execute(args[1].GetValue<IExecutable>());
         }
 
+        [Command(Name = "call_context")]
+        public static IValue CallContext(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(ctx, arguments)
+                .Exactly(2)
+                .Execute()
+                .CanConvert<IExecutionContext>(0)
+                .CanConvert<IExecutable>(1)
+                .Results();
+
+            IExecutionContext exportTo = args[0].GetValue<IExecutionContext>();
+            if (exportTo == null)
+                throw new ContextException("Cannot call into to a null context");
+
+            exportTo.PushArgumentContext(ctx);
+            try
+            {
+                return exportTo.Execute(args[1].GetValue<IExecutable>());
+            }
+            finally
+            {
+                exportTo.PopArgumentContext();
+            }
+        }
+
         [Command(Name = "self_context")]
         public static IValue GetSelfContext(IExecutionContext ctx, IList<IArgument> arguments)
         {

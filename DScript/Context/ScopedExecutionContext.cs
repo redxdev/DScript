@@ -28,6 +28,8 @@ namespace DScript.Context
 
         private Stack<IExecutable> executionStack = new Stack<IExecutable>();
 
+        private Stack<IExecutionContext> argumentContext = new Stack<IExecutionContext>();
+
         public ScopedExecutionContext(IExecutionContext parent = null, IExecutionContext global = null)
         {
             this.parent = parent;
@@ -203,6 +205,16 @@ namespace DScript.Context
             this.commands.Remove(name);
         }
 
+        public void PushArgumentContext(IExecutionContext context)
+        {
+            this.argumentContext.Push(context);
+        }
+
+        public void PopArgumentContext()
+        {
+            this.argumentContext.Pop();
+        }
+
         public IValue Execute(IExecutable executable, bool breakable = false)
         {
             try
@@ -239,7 +251,7 @@ namespace DScript.Context
 
         public IValue Execute(string command, IList<IArgument> arguments)
         {
-            IValue result = this.GetCommand(command)(this, arguments);
+            IValue result = this.GetCommand(command)(this.argumentContext.Count > 0 ? this.argumentContext.Peek() : this, arguments);
             if (result == null)
                 result = GenericValue<object>.Default;
             return result;
