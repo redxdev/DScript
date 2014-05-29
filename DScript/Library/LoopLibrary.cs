@@ -16,7 +16,7 @@ namespace DScript.Library
         [Command(Name = "for")]
         public static IValue For(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(4)
                 .CanConvert<IExecutable>()
                 .Results();
@@ -47,7 +47,7 @@ namespace DScript.Library
         [Command(Name = "while")]
         public static IValue While(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<IExecutable>()
                 .Results();
@@ -72,7 +72,7 @@ namespace DScript.Library
         [Command(Name = "do")]
         public static IValue Do(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<IExecutable>()
                 .Results();

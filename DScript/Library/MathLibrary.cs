@@ -23,7 +23,7 @@ namespace DScript.Library
         [Command(Name = "add")]
         public static IValue Add(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<double>()
                 .Results();
@@ -40,7 +40,7 @@ namespace DScript.Library
         [Command(Name = "sub")]
         public static IValue Sub(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<double>()
                 .Results();
@@ -57,7 +57,7 @@ namespace DScript.Library
         [Command(Name = "mul")]
         public static IValue Mul(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<double>()
                 .Results();
@@ -74,7 +74,7 @@ namespace DScript.Library
         [Command(Name = "div")]
         public static IValue Div(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();
@@ -87,7 +87,7 @@ namespace DScript.Library
         [Command(Name = "mod")]
         public static IValue Mod(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();
@@ -100,7 +100,7 @@ namespace DScript.Library
         [Command(Name = "rand_seed")]
         public static IValue RandSeed(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Between(0, 1)
                 .CanConvert<int>()
                 .Results();
@@ -120,7 +120,7 @@ namespace DScript.Library
         [Command(Name = "rand_int")]
         public static IValue RandInt(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Between(0, 2)
                 .Results();
 

@@ -16,7 +16,7 @@ namespace DScript.Library
         [Command(Name = "if")]
         public static IValue ifStm(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Between(2, 3)
                 .CanConvert<bool>(0)
                 .CanConvert<IExecutable>(1)
@@ -40,7 +40,7 @@ namespace DScript.Library
         [Command(Name = "equal")]
         public static IValue Equal(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .Results();
 
@@ -57,7 +57,7 @@ namespace DScript.Library
         [Command(Name = "not")]
         public static IValue Not(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<bool>()
                 .Results();
@@ -68,7 +68,7 @@ namespace DScript.Library
         [Command(Name = "and")]
         public static IValue And(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<bool>()
                 .Results();
@@ -85,7 +85,7 @@ namespace DScript.Library
         [Command(Name = "or")]
         public static IValue Or(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<bool>()
                 .Results();
@@ -102,7 +102,7 @@ namespace DScript.Library
         [Command(Name = "lt")]
         public static IValue LessThan(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();
@@ -113,7 +113,7 @@ namespace DScript.Library
         [Command(Name = "lteq")]
         public static IValue LessThanEqual(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();
@@ -124,7 +124,7 @@ namespace DScript.Library
         [Command(Name = "gt")]
         public static IValue GreaterThan(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();
@@ -135,7 +135,7 @@ namespace DScript.Library
         [Command(Name = "gteq")]
         public static IValue GreaterThanEqual(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<double>()
                 .Results();

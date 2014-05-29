@@ -10,9 +10,9 @@ namespace DScript.Utility
 {
     public static class CommandUtilities
     {
-        public static ArgumentManager ManageArguments(IExecutionContext context, IList<IArgument> args)
+        public static ArgumentManager ManageArguments(IList<IArgument> args)
         {
-            return new ArgumentManager(context, args);
+            return new ArgumentManager(args);
         }
     }
 }

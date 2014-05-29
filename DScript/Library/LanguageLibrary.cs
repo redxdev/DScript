@@ -24,7 +24,7 @@ namespace DScript.Library
         [Command(Name = "nullcmd")]
         public static IValue NullCommand(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Results();
 
             return GenericValue<object>.Default;
@@ -33,7 +33,7 @@ namespace DScript.Library
         [Command(Name = "set")]
         public static IValue Set(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<string>(0)
                 .Results();
@@ -46,7 +46,7 @@ namespace DScript.Library
         [Command(Name = "get")]
         public static IValue Get(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -57,7 +57,7 @@ namespace DScript.Library
         [Command(Name = "define")]
         public static IValue Define(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Between(1, 2)
                 .CanConvert<string>(0)
                 .Results();
@@ -79,7 +79,7 @@ namespace DScript.Library
         [Command(Name = "undefine")]
         public static IValue Undefine(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -92,7 +92,7 @@ namespace DScript.Library
         [Command(Name = "is_defined")]
         public static IValue IsDefined(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -103,7 +103,7 @@ namespace DScript.Library
         [Command(Name = "build")]
         public static IValue Build(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -115,7 +115,7 @@ namespace DScript.Library
         [Command(Name = "execute")]
         public static IValue Execute(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<IExecutable>(0)
                 .Results();
@@ -128,7 +128,7 @@ namespace DScript.Library
         {
             return (ctx, arguments) =>
             {
-                var args = CommandUtilities.ManageArguments(ctx, arguments)
+                var args = CommandUtilities.ManageArguments(arguments)
                     .Exactly(argumentNames.Count)
                     .Results();
 
@@ -145,7 +145,7 @@ namespace DScript.Library
         [Command(Name = "define_func")]
         public static IValue Function(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<string>(0)
                 .CanConvert<IExecutable>(1)
@@ -168,7 +168,7 @@ namespace DScript.Library
         [Command(Name = "undefine_func")]
         public static IValue UndefineFunction(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -181,7 +181,7 @@ namespace DScript.Library
         [Command(Name = "is_func_defined")]
         public static IValue IsFunctionDefined(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();
@@ -192,7 +192,7 @@ namespace DScript.Library
         [Command(Name = "typeof")]
         public static IValue Typeof(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .Results();
 
@@ -202,7 +202,7 @@ namespace DScript.Library
         [Command(Name = "break_execution")]
         public static IValue BreakExecution(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Between(0, 1)
                 .Results();
 
@@ -215,7 +215,7 @@ namespace DScript.Library
         [Command(Name = "cancel_execution")]
         public static IValue CancelExecution(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            CommandUtilities.ManageArguments(ctx, arguments)
+            CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -226,7 +226,7 @@ namespace DScript.Library
         [Command(Name = "fault_execution")]
         public static IValue FaultExecution(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            CommandUtilities.ManageArguments(ctx, arguments)
+            CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -237,7 +237,7 @@ namespace DScript.Library
         [Command(Name ="export_context")]
         public static IValue ExportContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<IExecutionContext>(0)
                 .CanConvert<IExecutable>(1)
@@ -253,7 +253,7 @@ namespace DScript.Library
         [Command(Name = "call_context")]
         public static IValue CallContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(2)
                 .CanConvert<IExecutionContext>(0)
                 .CanConvert<IExecutable>(1)
@@ -277,7 +277,7 @@ namespace DScript.Library
         [Command(Name = "self_context")]
         public static IValue GetSelfContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -287,7 +287,7 @@ namespace DScript.Library
         [Command(Name = "parent_context")]
         public static IValue GetParentContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -297,7 +297,7 @@ namespace DScript.Library
         [Command(Name = "global_context")]
         public static IValue GetGlobalContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -307,7 +307,7 @@ namespace DScript.Library
         [Command(Name = "define_module")]
         public static IValue DefineModule(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>()
                 .Results();
@@ -320,7 +320,7 @@ namespace DScript.Library
         [Command(Name = "create_context")]
         public static IValue CreateContext(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 

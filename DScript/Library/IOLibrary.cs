@@ -24,7 +24,7 @@ namespace DScript.Library
         [Command(Name = "readfile")]
         public static IValue ReadFile(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<string>(0)
                 .Results();

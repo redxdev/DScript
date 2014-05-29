@@ -17,7 +17,7 @@ namespace DScript.Library
         [Command(Name = "echo")]
         public static IValue Echo(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .Results();
 
@@ -27,7 +27,7 @@ namespace DScript.Library
         [Command(Name = "concat")]
         public static IValue Concat(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .AtLeast(2)
                 .CanConvert<string>()
                 .Results();
@@ -45,7 +45,7 @@ namespace DScript.Library
         [Command(Name = "time")]
         public static IValue Time(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<IExecutable>()
                 .Results();

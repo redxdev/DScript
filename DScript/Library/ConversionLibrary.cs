@@ -15,7 +15,7 @@ namespace DScript.Library
     {
         public static IValue Convert<T>(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .CanConvert<T>()
                 .Results();
@@ -32,7 +32,7 @@ namespace DScript.Library
         [Command(Name = "obj_to_string")]
         public static IValue ObjectToString(IExecutionContext context, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(context, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
                 .Results();
 

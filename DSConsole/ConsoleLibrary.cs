@@ -17,7 +17,7 @@ namespace DSConsole
         [Command(Name = "exit")]
         public static IValue Exit(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -29,9 +29,8 @@ namespace DSConsole
         [Command(Name = "print")]
         public static IValue Print(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(1)
-                .Execute()
                 .Results();
 
             Console.WriteLine(args[0].GetValue<string>());
@@ -42,7 +41,7 @@ namespace DSConsole
         [Command(Name = "readline")]
         public static IValue ReadLine(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -52,7 +51,7 @@ namespace DSConsole
         [Command(Name = "result")]
         public static IValue Result(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
@@ -62,7 +61,7 @@ namespace DSConsole
         [Command(Name = "exception")]
         public static IValue Exception(IExecutionContext ctx, IList<IArgument> arguments)
         {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
+            var args = CommandUtilities.ManageArguments(arguments)
                 .Exactly(0)
                 .Results();
 
