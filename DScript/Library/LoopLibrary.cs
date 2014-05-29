@@ -33,7 +33,7 @@ namespace DScript.Library
 
             while(localCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = localCtx.Execute(execute, true);
+                lastValue = localCtx.Execute(execute, breakable: true);
 
                 if (execute.DidBreak())
                     break;
@@ -60,7 +60,7 @@ namespace DScript.Library
 
             while(localCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = localCtx.Execute(execute, true);
+                lastValue = localCtx.Execute(execute, breakable: true);
 
                 if (execute.DidBreak())
                     break;
@@ -85,7 +85,7 @@ namespace DScript.Library
 
             do
             {
-                lastValue = localCtx.Execute(execute);
+                lastValue = localCtx.Execute(execute, breakable: true);
 
                 if(execute.DidBreak())
                     break;
