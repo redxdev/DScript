@@ -19,19 +19,31 @@ namespace DScript.Library
             var args = CommandUtilities.ManageArguments(arguments)
                 .Between(2, 3)
                 .CanConvert<bool>(0)
-                .CanConvert<IExecutable>(1)
-                .CanConvert<IExecutable>(2)
                 .Results();
 
             if(args[0].GetValue<bool>())
             {
-                IExecutionContext localCtx = ctx.CreateChildContext();
-                return localCtx.Execute(arguments[1].GetValue().GetValue<IExecutable>());
+                if (args[1].CanConvert<IExecutable>())
+                {
+                    IExecutionContext localCtx = ctx.CreateChildContext();
+                    return localCtx.Execute(arguments[1].GetValue().GetValue<IExecutable>());
+                }
+                else
+                {
+                    return args[1];
+                }
             }
             else if(args.Length == 3)
             {
-                IExecutionContext localCtx = ctx.CreateChildContext();
-                return localCtx.Execute(arguments[2].GetValue().GetValue<IExecutable>());
+                if (args[2].CanConvert<IExecutable>())
+                {
+                    IExecutionContext localCtx = ctx.CreateChildContext();
+                    return localCtx.Execute(arguments[2].GetValue().GetValue<IExecutable>());
+                }
+                else
+                {
+                    return args[2];
+                }
             }
 
             return GenericValue<object>.Default;

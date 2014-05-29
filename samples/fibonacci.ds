@@ -1,6 +1,5 @@
 # Recursive fibonacci number generator
 module $fibonacci
-module $fib
 
 func run($n) {
 	var $prev = 1

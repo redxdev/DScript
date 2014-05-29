@@ -52,7 +52,7 @@ namespace DScript.Utility.Conversion
             ISet<Type> fromConversions = from.GetConversionsTo();
             ISet<Type> toConversions = to.GetConversionsFrom();
 
-            return fromConversions.Union(toConversions).Count() > 0;
+            return fromConversions.Intersect(toConversions).Count() > 0;
         }
 
         public static bool CanConvert<From, To>()
