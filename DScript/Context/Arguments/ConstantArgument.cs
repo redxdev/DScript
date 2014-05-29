@@ -29,6 +29,10 @@ namespace DScript.Context.Arguments
             return true;
         }
 
+        public void Reset()
+        {
+        }
+
         public IValue GetValue()
         {
             return this.value;

@@ -248,6 +248,12 @@ namespace DScript.Context
             IValue result = this.GetCommand(command)(this, arguments);
             if (result == null)
                 result = GenericValue<object>.Default;
+
+            foreach(IArgument arg in arguments)
+            {
+                arg.Reset();
+            }
+
             return result;
         }
 

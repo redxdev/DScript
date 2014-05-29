@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DScript.Context
 {
     [Serializable]
-    public class CommandException : Exception
+    public class CommandException : ContextException
     {
         public CommandException()
             : base()

@@ -14,6 +14,8 @@ namespace DScript.Context.Arguments
 
         bool DidExecute();
 
+        void Reset();
+
         IValue GetValue();
     }
 }
