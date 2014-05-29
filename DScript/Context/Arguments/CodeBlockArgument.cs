@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DScript.Context.Arguments
 {
-    public class CodeBlockArgument : IArgument
+    public class CodeBlockArgument : AbstractArgument
     {
         public ICodeBlock Code
         {
@@ -14,31 +14,14 @@ namespace DScript.Context.Arguments
             set;
         }
 
-        private IValue result = null;
-
-        public IValue GetRawValue()
+        public override IValue GetRawValue()
         {
             return new GenericValue<ICodeBlock>(this.Code);
         }
 
-        public void Execute(IExecutionContext ctx)
+        protected override IValue Execute(IExecutionContext ctx)
         {
-            this.result = ctx.Execute(this.Code);
-        }
-
-        public bool DidExecute()
-        {
-            return this.result != null;
-        }
-
-        public void Reset()
-        {
-            this.result = null;
-        }
-
-        public IValue GetValue()
-        {
-            return this.result;
+            return ctx.Execute(this.Code);
         }
     }
 }

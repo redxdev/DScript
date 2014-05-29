@@ -8,7 +8,7 @@ using DScript.Context.Variables;
 namespace DScript.Context.Arguments
 {
     [Obsolete("Use CodeBlockArgument with the command \"get\" and a single string argument with the name of the variable")]
-    public class VariableArgument : IArgument
+    public class VariableArgument : AbstractArgument
     {
         public string Variable
         {
@@ -16,31 +16,14 @@ namespace DScript.Context.Arguments
             set;
         }
 
-        private IValue result = null;
-
-        public IValue GetRawValue()
+        public override IValue GetRawValue()
         {
             return new GenericValue<string>(this.Variable);
         }
 
-        public void Execute(IExecutionContext ctx)
+        protected override IValue Execute(IExecutionContext ctx)
         {
-            this.result = ctx.GetVariable(this.Variable).Value;
-        }
-
-        public bool DidExecute()
-        {
-            return this.result != null;
-        }
-
-        public void Reset()
-        {
-            this.result = null;
-        }
-
-        public IValue GetValue()
-        {
-            return this.result;
+            return ctx.GetVariable(this.Variable).Value;
         }
     }
 }

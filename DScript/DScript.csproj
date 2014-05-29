@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Arguments\AbstractArgument.cs" />
     <Compile Include="Context\Arguments\ExecutableArgument.cs" />
     <Compile Include="Context\Attributes\ModuleAttribute.cs" />
     <Compile Include="Context\CommandException.cs" />

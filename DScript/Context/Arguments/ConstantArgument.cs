@@ -15,22 +15,21 @@ namespace DScript.Context.Arguments
             this.value = value;
         }
 
+        public void BeginExecution(IExecutionContext ctx)
+        {
+        }
+
+        public void EndExecution(IExecutionContext ctx)
+        {
+        }
+
+        public void PreExecute(IExecutionContext ctx)
+        {
+        }
+
         public IValue GetRawValue()
         {
             return this.value;
-        }
-
-        public void Execute(IExecutionContext ctx)
-        {
-        }
-
-        public bool DidExecute()
-        {
-            return true;
-        }
-
-        public void Reset()
-        {
         }
 
         public IValue GetValue()

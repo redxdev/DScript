@@ -72,7 +72,7 @@ namespace DSConsole
 
                 try
                 {
-                    LastResult = context.Execute(executable);
+                    LastResult = context.Execute(executable, breakable: true);
                     Console.WriteLine(LastResult.GetValue<string>());
                 }
                 catch(ArgumentException e)

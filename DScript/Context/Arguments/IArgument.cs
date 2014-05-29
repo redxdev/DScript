@@ -8,13 +8,13 @@ namespace DScript.Context.Arguments
 {
     public interface IArgument
     {
+        void BeginExecution(IExecutionContext ctx);
+
+        void EndExecution(IExecutionContext ctx);
+
+        void PreExecute(IExecutionContext ctx);
+
         IValue GetRawValue();
-
-        void Execute(IExecutionContext ctx);
-
-        bool DidExecute();
-
-        void Reset();
 
         IValue GetValue();
     }

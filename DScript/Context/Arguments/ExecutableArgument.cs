@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DScript.Context.Arguments
 {
-    public class ExecutableArgument : IArgument
+    public class ExecutableArgument : AbstractArgument
     {
         public IExecutable Executable
         {
@@ -14,31 +14,14 @@ namespace DScript.Context.Arguments
             set;
         }
 
-        private IValue result = null;
-
-        public IValue GetRawValue()
+        public override IValue GetRawValue()
         {
             return new GenericValue<IExecutable>(this.Executable);
         }
 
-        public void Execute(IExecutionContext ctx)
+        protected override IValue Execute(IExecutionContext ctx)
         {
-            this.result = ctx.Execute(this.Executable);
-        }
-
-        public bool DidExecute()
-        {
-            return this.result != null;
-        }
-
-        public void Reset()
-        {
-            this.result = null;
-        }
-
-        public IValue GetValue()
-        {
-            return this.result;
+            return ctx.Execute(this.Executable);
         }
     }
 }

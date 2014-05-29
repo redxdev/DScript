@@ -241,8 +241,7 @@ namespace DScript.Context
         {
             foreach(IArgument arg in arguments)
             {
-                if (!arg.DidExecute())
-                    arg.Execute(this);
+                arg.BeginExecution(this);
             }
 
             IValue result = this.GetCommand(command)(this, arguments);
@@ -251,7 +250,7 @@ namespace DScript.Context
 
             foreach(IArgument arg in arguments)
             {
-                arg.Reset();
+                arg.EndExecution(this);
             }
 
             return result;

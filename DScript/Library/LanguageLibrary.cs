@@ -267,7 +267,7 @@ namespace DScript.Library
             {
                 foreach(IArgument arg in code.Arguments)
                 {
-                    arg.Execute(ctx);
+                    arg.PreExecute(ctx);
                 }
             }
 
