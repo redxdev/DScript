@@ -42,6 +42,7 @@ namespace DSConsole
 
             while(Running)
             {
+                Console.Title = "DScript Console";
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.Write("dscript> ");
@@ -69,6 +70,8 @@ namespace DSConsole
                     LastException = e;
                     continue;
                 }
+
+                Console.Title = "DScript Console [Running]";
 
                 try
                 {
