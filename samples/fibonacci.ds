@@ -8,12 +8,12 @@ func run($n) {
 	var $sum = 0
 	
 	for(
-		var $i = 0, lt($i, $n), $i = add($i, 1),
-		[
+		{var $i = 0}, {lt($i, $n)}, {$i = add($i, 1)},
+		{
 			$sum = add($result, $prev)
 			$prev = $result
 			$result = $sum
-		]
+		}
 	)
 	
 	$result
@@ -21,13 +21,13 @@ func run($n) {
 
 func run_recursive($n) {
 	if(lteq($n,0),1,
-		add(
+		{add(
 			[
 				run_recursive(sub($n,1))
 			],
 			[
 				run_recursive(sub($n,2))
 			]
-		)
+		)}
 	)
 }

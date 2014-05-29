@@ -10,23 +10,20 @@ namespace DScript.Utility
 {
     public class ArgumentManager
     {
-        private IExecutionContext context = null;
-
         private IList<IArgument> arguments = null;
 
         private IValue[] values = null;
 
         private LinkedList<Action> actions = new LinkedList<Action>();
 
-        public ArgumentManager(IExecutionContext context, IList<IArgument> arguments)
+        public ArgumentManager(IList<IArgument> arguments)
         {
-            this.context = context;
             this.arguments = arguments;
 
             values = new IValue[this.arguments.Count];
             for (int i = 0; i < this.arguments.Count; i++)
             {
-                values[i] = this.arguments[i].GetRawValue(this.context);
+                values[i] = this.arguments[i].GetValue();
             }
         }
 
@@ -168,34 +165,6 @@ namespace DScript.Utility
         public ArgumentManager CanConvert<T1, T2>()
         {
             return this.CanConvert<T1, T2>(0, this.arguments.Count);
-        }
-
-        public ArgumentManager Execute()
-        {
-            return this.Execute(0, this.arguments.Count);
-        }
-
-        public ArgumentManager Execute(int index)
-        {
-            this.actions.AddLast(() =>
-                {
-                    this.values[index] = this.arguments[index].GetValue(this.context);
-                });
-
-            return this;
-        }
-
-        public ArgumentManager Execute(int start, int end)
-        {
-            this.actions.AddLast(() =>
-                {
-                    for(int i = start; i < end; i++)
-                    {
-                        this.values[i] = this.arguments[i].GetValue(this.context);
-                    }
-                });
-
-            return this;
         }
     }
 }

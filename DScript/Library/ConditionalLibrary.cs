@@ -18,17 +18,20 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Between(2, 3)
-                .Execute(0)
                 .CanConvert<bool>(0)
+                .CanConvert<IExecutable>(1)
+                .CanConvert<IExecutable>(2)
                 .Results();
 
             if(args[0].GetValue<bool>())
             {
-                return arguments[1].GetValue(ctx);
+                IExecutionContext localCtx = ctx.CreateChildContext();
+                return localCtx.Execute(arguments[1].GetValue().GetValue<IExecutable>());
             }
             else if(args.Length == 3)
             {
-                return arguments[2].GetValue(ctx);
+                IExecutionContext localCtx = ctx.CreateChildContext();
+                return localCtx.Execute(arguments[2].GetValue().GetValue<IExecutable>());
             }
 
             return GenericValue<object>.Default;
@@ -39,7 +42,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .Results();
 
             IValue first = args[0];
@@ -57,7 +59,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<bool>()
                 .Results();
 
@@ -69,7 +70,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<bool>()
                 .Results();
 
@@ -87,7 +87,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<bool>()
                 .Results();
 
@@ -105,7 +104,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -117,7 +115,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -129,7 +126,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -141,7 +137,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 

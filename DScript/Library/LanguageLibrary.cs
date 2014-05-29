@@ -25,7 +25,6 @@ namespace DScript.Library
         public static IValue NullCommand(IExecutionContext ctx, IList<IArgument> arguments)
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Execute()
                 .Results();
 
             return GenericValue<object>.Default;
@@ -36,7 +35,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -50,7 +48,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -62,7 +59,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Between(1, 2)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -85,7 +81,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -99,22 +94,10 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
             return new GenericValue<bool>(ctx.HasVariable(args[0].GetValue<string>()));
-        }
-
-        [Command(Name = "block")]
-        public static IValue Block(IExecutionContext ctx, IList<IArgument> arguments)
-        {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(1)
-                .CanConvert<ICodeBlock, IExecutable>(0)
-                .Results();
-
-            return args[0];
         }
 
         [Command(Name = "build")]
@@ -122,7 +105,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -135,7 +117,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<IExecutable>(0)
                 .Results();
 
@@ -149,7 +130,6 @@ namespace DScript.Library
             {
                 var args = CommandUtilities.ManageArguments(ctx, arguments)
                     .Exactly(argumentNames.Count)
-                    .Execute()
                     .Results();
 
                 IExecutionContext localCtx = ctx.CreateChildContext();
@@ -167,7 +147,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<string>(0)
                 .CanConvert<IExecutable>(1)
                 .CanConvert<string>(2, arguments.Count - 1)
@@ -191,7 +170,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -205,7 +183,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>(0)
                 .Results();
 
@@ -217,7 +194,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .Results();
 
             return new GenericValue<Type>(args[0].GetValueType());
@@ -228,7 +204,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Between(0, 1)
-                .Execute()
                 .Results();
 
             IValue result = args.Length == 0 ? GenericValue<object>.Default : args[0];
@@ -264,7 +239,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<IExecutionContext>(0)
                 .CanConvert<IExecutable>(1)
                 .Results();
@@ -281,7 +255,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<IExecutionContext>(0)
                 .CanConvert<IExecutable>(1)
                 .Results();
@@ -290,15 +263,15 @@ namespace DScript.Library
             if (exportTo == null)
                 throw new ContextException("Cannot call into to a null context");
 
-            exportTo.PushArgumentContext(ctx);
-            try
+            foreach(ICodeBlock code in args[1].GetValue<IExecutable>().CodeBlocks)
             {
-                return exportTo.Execute(args[1].GetValue<IExecutable>());
+                foreach(IArgument arg in code.Arguments)
+                {
+                    arg.Execute(ctx);
+                }
             }
-            finally
-            {
-                exportTo.PopArgumentContext();
-            }
+
+            return exportTo.Execute(args[1].GetValue<IExecutable>());
         }
 
         [Command(Name = "self_context")]
@@ -336,7 +309,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<string>()
                 .Results();
 

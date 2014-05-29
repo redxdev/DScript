@@ -15,12 +15,21 @@ namespace DScript.Context.Arguments
             this.value = value;
         }
 
-        public IValue GetRawValue(IExecutionContext context)
+        public IValue GetRawValue()
         {
             return this.value;
         }
 
-        public IValue GetValue(IExecutionContext context)
+        public void Execute(IExecutionContext ctx)
+        {
+        }
+
+        public bool DidExecute()
+        {
+            return true;
+        }
+
+        public IValue GetValue()
         {
             return this.value;
         }

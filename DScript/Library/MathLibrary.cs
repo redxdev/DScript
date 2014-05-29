@@ -18,8 +18,6 @@ namespace DScript.Library
         [ContextRegistration]
         public static void ContextRegistration(IExecutionContext context)
         {
-            context.DefineVariable("math.pi", new ConstantVariable(new GenericValue<double>(Math.PI)));
-            context.DefineVariable("math.e", new ConstantVariable(new GenericValue<double>(Math.E)));
         }
 
         [Command(Name = "add")]
@@ -27,7 +25,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -45,7 +42,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -63,7 +59,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -81,7 +76,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -95,7 +89,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(2)
-                .Execute()
                 .CanConvert<double>()
                 .Results();
 
@@ -109,7 +102,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Between(0, 1)
-                .Execute()
                 .CanConvert<int>()
                 .Results();
 

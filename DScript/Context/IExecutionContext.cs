@@ -52,10 +52,6 @@ namespace DScript.Context
 
         void UnregisterCommand(string name);
 
-        void PushArgumentContext(IExecutionContext context);
-
-        void PopArgumentContext();
-
         IValue Execute(IExecutable executable, bool breakable = false);
 
         IValue Execute(ICodeBlock code);

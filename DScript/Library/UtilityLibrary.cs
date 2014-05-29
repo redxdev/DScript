@@ -19,7 +19,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .Results();
 
             return args[0];
@@ -30,7 +29,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .AtLeast(2)
-                .Execute()
                 .CanConvert<string>()
                 .Results();
 
@@ -49,7 +47,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(ctx, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<IExecutable>()
                 .Results();
 
@@ -61,56 +58,6 @@ namespace DScript.Library
             stopwatch.Stop();
 
             return new GenericValue<double>(stopwatch.Elapsed.TotalSeconds);
-        }
-
-        private static string trace_recurse(IExecutionContext ctx, ICodeBlock code, string currIndent)
-        {
-            string result = currIndent + code.Command;
-            string indent = currIndent + "  ";
-
-            foreach(IArgument arg in code.Arguments)
-            {
-                result += "\n" + indent + arg.GetType().Name + "\n";
-                if(arg is CodeBlockArgument)
-                {
-                    result += trace_recurse(ctx, (arg as CodeBlockArgument).Code, indent + "  ");
-                }
-                else if(arg is ExecutableArgument)
-                {
-                    result += trace_recurse(ctx, (arg as ExecutableArgument).Executable, indent + "  ");
-                }
-                else
-                {
-                    result += indent + "\t" + arg.GetRawValue(ctx).ToString();
-                }
-            }
-
-            return result;
-        }
-
-        private static string trace_recurse(IExecutionContext ctx, IExecutable executable, string currIndent)
-        {
-            string result = currIndent + "IExecutable";
-            string indent = currIndent + "  ";
-
-            foreach(ICodeBlock code in executable.CodeBlocks)
-            {
-                result += "\n" + trace_recurse(ctx, code, indent);
-            }
-
-            return result;
-        }
-
-        [Command(Name = "trace")]
-        public static IValue Trace(IExecutionContext ctx, IList<IArgument> arguments)
-        {
-            var args = CommandUtilities.ManageArguments(ctx, arguments)
-                .Exactly(1)
-                .Execute()
-                .CanConvert<IExecutable>()
-                .Results();
-
-            return new GenericValue<string>(trace_recurse(ctx, args[0].GetValue<IExecutable>(), ""));
         }
     }
 }

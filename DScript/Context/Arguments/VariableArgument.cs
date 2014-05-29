@@ -16,14 +16,26 @@ namespace DScript.Context.Arguments
             set;
         }
 
-        public IValue GetRawValue(IExecutionContext context)
+        private IValue result = null;
+
+        public IValue GetRawValue()
         {
             return new GenericValue<string>(this.Variable);
         }
 
-        public IValue GetValue(IExecutionContext context)
+        public void Execute(IExecutionContext ctx)
         {
-            return context.GetVariable(this.Variable).Value;
+            this.result = ctx.GetVariable(this.Variable).Value;
+        }
+
+        public bool DidExecute()
+        {
+            return this.result != null;
+        }
+
+        public IValue GetValue()
+        {
+            return this.result;
         }
     }
 }

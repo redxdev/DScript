@@ -160,11 +160,6 @@ function_def returns [ICodeBlock codeBlock]
 		{
 			List<IArgument> args = new List<IArgument>();
 			args.Add(new ConstantArgument(new GenericValue<string>($name.text)));
-			List<IArgument> cbArgs = new List<IArgument>();
-			cbArgs.Add(new ExecutableArgument()
-				{
-					Executable = $exe.executable
-				});
 			args.Add(new ConstantArgument(new GenericValue<IExecutable>($exe.executable)));
 			args.AddRange(paramArgs);
 			$codeBlock = new CodeBlock()
@@ -360,11 +355,6 @@ argument returns [IArgument result]
 		}
 	|	cblock=code_block
 		{
-			List<IArgument> cbArgs = new List<IArgument>();
-			cbArgs.Add(new ExecutableArgument()
-				{
-					Executable = $cblock.executable
-				});
 			$result = new ConstantArgument(new GenericValue<IExecutable>($cblock.executable));
 		}
 	|	exe=statement

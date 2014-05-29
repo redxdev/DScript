@@ -17,7 +17,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(1)
-                .Execute()
                 .CanConvert<T>()
                 .Results();
 
@@ -35,7 +34,6 @@ namespace DScript.Library
         {
             var args = CommandUtilities.ManageArguments(context, arguments)
                 .Exactly(1)
-                .Execute()
                 .Results();
 
             return new GenericValue<string>(args[0].ToString());
