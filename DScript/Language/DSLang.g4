@@ -72,7 +72,7 @@ statement returns [ICodeBlock codeBlock]
 		|	gs=global_stm { $codeBlock = $gs.codeBlock; }
 		|	pc=parent_ctx { $codeBlock = $pc.codeBlock; }
 		|	gc=global_ctx { $codeBlock = $gc.codeBlock; }
-		|	sc=self_ctx {$codeBlock = $sc.codeBlock; }
+		|	sc=self_ctx { $codeBlock = $sc.codeBlock; }
 	)
 	(
 		'.' call=statement
@@ -153,7 +153,14 @@ function_def returns [ICodeBlock codeBlock]
 			{
 				paramArgs.Add(new ConstantArgument(new GenericValue<string>($argName.text)));
 			}
-		)*
+
+			(
+				',' VAR_SPEC argName2=IDENT
+				{
+					paramArgs.Add(new ConstantArgument(new GenericValue<string>($argName2.text)));
+				}
+			)*
+		)?
 		GROUP_END
 	)?
 		exe=code_block
@@ -527,5 +534,6 @@ WS
 	;
 
 COMMENT
-	:	'#' ~[\r\n]* -> channel(HIDDEN)
+	:	('//' ~[\r\n]*
+	|	'/*' .*? '*/') -> channel(HIDDEN)
 	;

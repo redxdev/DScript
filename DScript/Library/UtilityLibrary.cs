@@ -59,5 +59,70 @@ namespace DScript.Library
 
             return new GenericValue<double>(stopwatch.Elapsed.TotalSeconds);
         }
+
+
+
+        private static string trace_recurse(IExecutionContext ctx, ICodeBlock code, string currIndent)
+        {
+            string result = currIndent + code.Command;
+            string indent = currIndent + "  ";
+
+            foreach (IArgument arg in code.Arguments)
+            {
+                result += Environment.NewLine + indent + arg.GetType().Name + "[RAW]" + Environment.NewLine;
+                if (arg is CodeBlockArgument)
+                {
+                    result += trace_recurse(ctx, (arg as CodeBlockArgument).Code, indent + "  ");
+                }
+                else if (arg is ExecutableArgument)
+                {
+                    result += trace_recurse(ctx, (arg as ExecutableArgument).Executable, indent + "  ");
+                }
+                else
+                {
+                    IValue value = arg.GetRawValue();
+
+                    if (typeof(ICodeBlock).IsAssignableFrom(value.GetValueType()))
+                    {
+                        result += indent + "  ICodeBlock" + Environment.NewLine;
+                        result += trace_recurse(ctx, value.GetValue<ICodeBlock>(), indent + "    ");
+                    }
+                    else if (typeof(IExecutable).IsAssignableFrom(value.GetValueType()))
+                    {
+                        result += trace_recurse(ctx, value.GetValue<IExecutable>(), indent + "  ");
+                    }
+                    else
+                    {
+                        result += indent + "  " + value.ToString();
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static string trace_recurse(IExecutionContext ctx, IExecutable executable, string currIndent)
+        {
+            string result = currIndent + "IExecutable";
+            string indent = currIndent + "  ";
+
+            foreach (ICodeBlock code in executable.CodeBlocks)
+            {
+                result += Environment.NewLine + trace_recurse(ctx, code, indent);
+            }
+
+            return result;
+        }
+
+        [Command(Name = "trace")]
+        public static IValue Trace(IExecutionContext ctx, IList<IArgument> arguments)
+        {
+            var args = CommandUtilities.ManageArguments(arguments)
+                .Exactly(1)
+                .CanConvert<IExecutable>()
+                .Results();
+
+            return new GenericValue<string>(trace_recurse(ctx, args[0].GetValue<IExecutable>(), ""));
+        }
     }
 }

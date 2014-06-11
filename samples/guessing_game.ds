@@ -1,4 +1,4 @@
-# Classic guessing game
+// Classic guessing game
 
 var $c = $console
 

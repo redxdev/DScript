@@ -1,4 +1,4 @@
-# Recursive fibonacci number generator
+// Recursive fibonacci number generator
 module $fibonacci
 
 func run($n) {
