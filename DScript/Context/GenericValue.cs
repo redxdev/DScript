@@ -41,7 +41,7 @@ namespace DScript.Context
                     return (V)(object)this.value.ToString();
                 }
                 
-                throw e;
+                throw;
             }
         }
 

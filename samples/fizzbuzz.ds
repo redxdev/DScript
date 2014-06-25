@@ -1,0 +1,17 @@
+// FizzBuzz
+module $fizzbuzz
+
+func run($n) {
+	for(
+		{var $i = 1},
+		{lteq($i,$n)},
+		{$i = add($i,1)},
+		{
+			var $string = ""
+			if(equal(mod($i,3),0),{$string = "Fizz"})
+			if(equal(mod($i,5),0),{$string = concat($string,"Buzz")})
+			if(equal($string,""),{$string = $i})
+			$console.print($string)
+		}
+	)
+}

@@ -21,24 +21,25 @@ namespace DScript.Library
                 .CanConvert<IExecutable>()
                 .Results();
 
-            IExecutionContext localCtx = ctx.CreateChildContext();
+            IExecutionContext outerCtx = ctx.CreateChildContext();
             IExecutable initializer = args[0].GetValue<IExecutable>();
             IExecutable check = args[1].GetValue<IExecutable>();
             IExecutable increment = args[2].GetValue<IExecutable>();
             IExecutable execute = args[3].GetValue<IExecutable>();
 
-            localCtx.Execute(initializer);
+            outerCtx.Execute(initializer);
 
             IValue lastValue = GenericValue<object>.Default;
 
-            while(localCtx.Execute(check).GetValue<bool>())
+            while(outerCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = localCtx.Execute(execute, breakable: true);
+                IExecutionContext innerCtx = outerCtx.CreateChildContext();
+                lastValue = innerCtx.Execute(execute, breakable: true);
 
                 if (execute.DidBreak())
                     break;
 
-                localCtx.Execute(increment);
+                outerCtx.Execute(increment);
             }
 
             return lastValue;
@@ -52,15 +53,16 @@ namespace DScript.Library
                 .CanConvert<IExecutable>()
                 .Results();
 
-            IExecutionContext localCtx = ctx.CreateChildContext();
+            IExecutionContext outerCtx = ctx.CreateChildContext();
             IExecutable check = args[0].GetValue<IExecutable>();
             IExecutable execute = args[1].GetValue<IExecutable>();
 
             IValue lastValue = GenericValue<object>.Default;
 
-            while(localCtx.Execute(check).GetValue<bool>())
+            while(outerCtx.Execute(check).GetValue<bool>())
             {
-                lastValue = localCtx.Execute(execute, breakable: true);
+                IExecutionContext innerCtx = outerCtx.CreateChildContext();
+                lastValue = innerCtx.Execute(execute, breakable: true);
 
                 if (execute.DidBreak())
                     break;
@@ -77,7 +79,7 @@ namespace DScript.Library
                 .CanConvert<IExecutable>()
                 .Results();
 
-            IExecutionContext localCtx = ctx.CreateChildContext();
+            IExecutionContext outerCtx = ctx.CreateChildContext();
             IExecutable check = args[1].GetValue<IExecutable>();
             IExecutable execute = args[0].GetValue<IExecutable>();
 
@@ -85,11 +87,12 @@ namespace DScript.Library
 
             do
             {
-                lastValue = localCtx.Execute(execute, breakable: true);
+                IExecutionContext innerCtx = outerCtx.CreateChildContext();
+                lastValue = innerCtx.Execute(execute, breakable: true);
 
                 if(execute.DidBreak())
                     break;
-            } while(localCtx.Execute(check).GetValue<bool>());
+            } while(outerCtx.Execute(check).GetValue<bool>());
 
             return lastValue;
         }
