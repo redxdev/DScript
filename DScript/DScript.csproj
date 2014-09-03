@@ -55,6 +55,7 @@
     <Compile Include="Library\ConversionLibrary.cs" />
     <Compile Include="Library\IOLibrary.cs" />
     <Compile Include="Library\LoopLibrary.cs" />
+    <Compile Include="Library\DictionaryLibrary.cs" />
     <Compile Include="Library\MathLibrary.cs" />
     <Compile Include="Library\UtilityLibrary.cs" />
     <Compile Include="Library\LanguageLibrary.cs" />
